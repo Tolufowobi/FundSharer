@@ -188,8 +188,8 @@ namespace FundSharer.Controllers
                         //Create its ticket
                         WaitingTicket Ticket = new WaitingTicket
                         {
-                            TicketHolderId = NewbankAccount.Id,
-                            EntryDate = DateTime.Now,
+//TicketHolderId = NewbankAccount.Id,
+                            EntryDate = DateTime.Now
                         };
                         TicketServices.AddTicket(Ticket);
 

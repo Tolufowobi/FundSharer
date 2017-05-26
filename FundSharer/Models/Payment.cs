@@ -24,6 +24,7 @@ namespace FundSharer.Models
 
         public bool Confirmed { get; set; }
 
+        public String DonationPackId { get; set; }
         public virtual Donation DonationPack { get; set; }
     }
 }

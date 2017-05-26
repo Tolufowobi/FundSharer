@@ -7,8 +7,9 @@ namespace FundSharer.Migrations
     {
         public override void Up()
         {
-            RenameColumn(table: "dbo.WaitingTickets", name: "TicketHolder_Id", newName: "TicketHolderId");
-            RenameIndex(table: "dbo.WaitingTickets", name: "IX_TicketHolder_Id", newName: "IX_TicketHolderId");
+            DropIndex("dbo.WaitingTickets", new[] { "TicketHolder_Id" });
+            DropForeignKey(dependentTable: "dbo.WaitingTickets", dependentColumn: "TicketHolder_Id", principalTable: "dbo.BankAccounts");
+            
         }
         
         public override void Down()

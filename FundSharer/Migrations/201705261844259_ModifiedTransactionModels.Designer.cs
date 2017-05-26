@@ -7,13 +7,13 @@ namespace FundSharer.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class BankAccountOwnerEdit1 : IMigrationMetadata
+    public sealed partial class ModifiedTransactionModels : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(BankAccountOwnerEdit1));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(ModifiedTransactionModels));
         
         string IMigrationMetadata.Id
         {
-            get { return "201705250025111_BankAccountOwnerEdit1"; }
+            get { return "201705261844259_ModifiedTransactionModels"; }
         }
         
         string IMigrationMetadata.Source

@@ -19,13 +19,11 @@ namespace FundSharer.Models
 
         public bool IsOpen { get; set; }
 
-        public int DonorId { get; set; }
-        [Required]
+        public String DonorId { get; set; }
         public virtual BankAccount Donor { get; set; }
 
-
         public String TicketId { get; set; }
-        [Required]
+       
         public virtual WaitingTicket Ticket { get; set; }
 
     }

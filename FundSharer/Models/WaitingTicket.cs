@@ -13,10 +13,8 @@ namespace FundSharer.Models
         {
             Donations = new List<Donation>();
         }
-
-        [Required]
+        
         public string TicketHolderId { get; set; }
-      
         public BankAccount TicketHolder { get; set; }
 
         public DateTime EntryDate { get; set; }

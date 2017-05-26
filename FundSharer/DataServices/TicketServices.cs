@@ -97,7 +97,7 @@ namespace FundSharer.DataServices
                 {
                     using (ApplicationDbContext db = new ApplicationDbContext())
                     {
-                        TicketList = (from t in db.WaitingList where t.TicketHolder.Id == Account.Id select t).ToList();
+                        TicketList = (from t in db.WaitingList where t.TicketHolderId == Account.Id select t).ToList();
                     }
                 }
             }

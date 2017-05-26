@@ -82,7 +82,7 @@ namespace FundSharer.DataServices
                 {
                     using (ApplicationDbContext db = new ApplicationDbContext())
                     {
-                        OutgoingDonations = (from d in db.Donations where d.Donor.Id == Account.Id select d).ToList();
+                        OutgoingDonations = (from d in db.Donations where d.DonorId == Account.Id select d).ToList();
                     }
                 }
             }
@@ -99,11 +99,14 @@ namespace FundSharer.DataServices
                     List<WaitingTicket> AccountTickets = TicketServices.GetTicketsForAccount(Account);
                     foreach (WaitingTicket t in AccountTickets)// loop through the list of ticket options
                     {
-                        foreach (Donation d in t.Donations)// loop through the donations list of each ticket
+                        if (t.Donations.Count() != 0)
                         {
-                            if (DonationServices.IsNotNull(d))// add non null donations to the list of donations.
+                            foreach (Donation d in t.Donations)// loop through the donations list of each ticket
                             {
-                                IncomingDonations.Add(d);
+                                if (DonationServices.IsNotNull(d))// add non null donations to the list of donations.
+                                {
+                                    IncomingDonations.Add(d);
+                                }
                             }
                         }
                     }

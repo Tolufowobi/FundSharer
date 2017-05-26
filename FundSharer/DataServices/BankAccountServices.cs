@@ -24,7 +24,7 @@ namespace FundSharer.DataServices
             BankAccount Acc = null;
             using (ApplicationDbContext db = new ApplicationDbContext())
             {
-                Acc = (from ba in db.BankAccounts where ba.Owner.Id == AUser.Id select ba).First();
+                Acc = (from ba in db.BankAccounts where ba.OwnerId == AUser.Id select ba).First();
             }
             return Acc;
         }

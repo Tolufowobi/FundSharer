@@ -80,10 +80,10 @@ namespace FundSharer.DataServices
             {
                 using (ApplicationDbContext db = new ApplicationDbContext())
                 {
-                    var paylist = (from p in db.Payments where p.DonationPack.Id == donation.Id select p).ToList();
-                    if (paylist.Count() > 0)
+                    var pay = (from p in db.Payments where p.DonationPackId == donation.Id select p).FirstOrDefault();
+                    if (pay != null)
                     {
-                        donationPay = paylist.First();
+                        donationPay = pay;
                     }
                 }
             }

@@ -70,7 +70,7 @@ namespace FundSharer.DataServices
             {
                 using (ApplicationDbContext db = new ApplicationDbContext())
                 {
-                    var imgs = (from i in db.POPImages where i.Payment.Id == pay.Id select i).ToList();
+                    var imgs = (from i in db.POPImages where i.PaymentId == pay.Id select i).ToList();
                     if (imgs.Count() > 0)
                     {
                         img = imgs.First();
