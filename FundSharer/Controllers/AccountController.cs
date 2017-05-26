@@ -163,10 +163,10 @@ namespace FundSharer.Controllers
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                   
                     // Create user claims - the user's first name.
                     UserManager.AddClaim(user.Id, new Claim(ClaimTypes.GivenName, user.FirstName));
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-
+                    
                     //create user's bank account.
                     var NewbankAccount = new BankAccount
                     {
@@ -174,11 +174,28 @@ namespace FundSharer.Controllers
                         AccountTitle = model.AccountTitle,
                         Bank = model.BankName,
                         IsReciever = false,
-                        Owner = user
+                        OwnerId = user.Id,
                     };
-
                     BankAccountServices.AddBankAccount(NewbankAccount);
-                    
+
+                    //Check to see if this is the first account in the record
+                    int AccountCount = BankAccountServices.GetBankAccounts().Count();
+                    // if this is the first account, then create a ticket for it
+                    // so it is available for matching
+                    if( AccountCount == 1 )
+                    {
+                        NewbankAccount.IsReciever = true;
+                        //Create its ticket
+                        WaitingTicket Ticket = new WaitingTicket
+                        {
+                            TicketHolderId = NewbankAccount.Id,
+                            EntryDate = DateTime.Now,
+                        };
+                        TicketServices.AddTicket(Ticket);
+
+                    }
+
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link

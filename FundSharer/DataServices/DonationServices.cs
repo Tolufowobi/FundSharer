@@ -12,7 +12,11 @@ namespace FundSharer.DataServices
 
         public static Donation GetDonationById(string DonationId)
         {
-            using (ApplicationDbContext db = new ApplicationDbContext())
+            if (DonationId == "")
+            {
+                return null;
+            }
+                using (ApplicationDbContext db = new ApplicationDbContext())
             {
                 return db.Donations.Find(DonationId);
             }

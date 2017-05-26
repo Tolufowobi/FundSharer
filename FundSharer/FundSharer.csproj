@@ -217,6 +217,18 @@
     <Compile Include="Migrations\201705222059330_UpdatedBankAccountModel.Designer.cs">
       <DependentUpon>201705222059330_UpdatedBankAccountModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201705250008381_BankAccountOwnerEdit.cs" />
+    <Compile Include="Migrations\201705250008381_BankAccountOwnerEdit.Designer.cs">
+      <DependentUpon>201705250008381_BankAccountOwnerEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705250025111_BankAccountOwnerEdit1.cs" />
+    <Compile Include="Migrations\201705250025111_BankAccountOwnerEdit1.Designer.cs">
+      <DependentUpon>201705250025111_BankAccountOwnerEdit1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201705260408187_TicketModelUpdate.cs" />
+    <Compile Include="Migrations\201705260408187_TicketModelUpdate.Designer.cs">
+      <DependentUpon>201705260408187_TicketModelUpdate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AdminAccount.cs" />
@@ -344,6 +356,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201705222059330_UpdatedBankAccountModel.resx">
       <DependentUpon>201705222059330_UpdatedBankAccountModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705250008381_BankAccountOwnerEdit.resx">
+      <DependentUpon>201705250008381_BankAccountOwnerEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705250025111_BankAccountOwnerEdit1.resx">
+      <DependentUpon>201705250025111_BankAccountOwnerEdit1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705260408187_TicketModelUpdate.resx">
+      <DependentUpon>201705260408187_TicketModelUpdate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

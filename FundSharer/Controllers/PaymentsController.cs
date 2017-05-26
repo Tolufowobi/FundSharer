@@ -117,30 +117,29 @@ namespace FundShare.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult UploadPaymentInfo()
+        public ActionResult UploadPaymentInfo(string DonationId)
         {
-            var AppUser = new ApplicationUser() { Id = User.Identity.GetUserId() };
-
-            BankAccount UserBankAccount = BankAccountServices.GetUserBankAccount(AppUser);
-
-            var outgoingdonations = DonationServices.GetOutgoingAccountDonations(UserBankAccount).Where(m => m.IsOpen == false).ToList();
-            Donation donation = null;
-            if (outgoingdonations.Count() == 1)
+            Donation donation = DonationServices.GetDonationById(DonationId);
+                if (donation != null)
+                {
+                    PaymentDetails details = new PaymentDetails
+                    {
+                        DonationId = donation.Id,
+                        DonorBankName = donation.Donor.Bank,
+                        DonorAccountNumber = donation.Donor.AccountNumber,
+                        DonorFullName = donation.Donor.AccountTitle,
+                        RecipientAccountNumber = donation.Ticket.TicketHolder.AccountNumber,
+                        RecipientBankName = donation.Ticket.TicketHolder.Bank,
+                        RecipientFullName = donation.Ticket.TicketHolder.AccountTitle
+                    };
+                    return View(details);
+                }
+            
+            else
             {
-                donation = outgoingdonations.First();
+                return HttpNotFound("We could not find the information you are looking for.");
             }
 
-            PaymentDetails details = new PaymentDetails
-            {
-                DonationId = donation.Id,
-                DonorBankName = donation.Donor.Bank,
-                DonorAccountNumber = donation.Donor.AccountNumber,
-                DonorFullName = donation.Donor.AccountTitle,
-                RecipientAccountNumber = donation.Ticket.TicketHolder.AccountNumber,
-                RecipientBankName = donation.Ticket.TicketHolder.Bank,
-                RecipientFullName = donation.Ticket.TicketHolder.AccountTitle
-            };
-            return View(details);
         }
 
         [HttpPost]

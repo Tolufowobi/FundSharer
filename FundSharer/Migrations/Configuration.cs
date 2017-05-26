@@ -13,8 +13,30 @@ namespace FundSharer.Migrations
             ContextKey = "FundSharer.Models.ApplicationDbContext";
         }
 
-        protected override void Seed(FundSharer.Models.ApplicationDbContext context)
+        protected override void  Seed(FundSharer.Models.ApplicationDbContext context)
         {
+
+            // Reset the database
+            
+            //AdminAccounts
+            context.AdminAccounts.RemoveRange(context.AdminAccounts.ToList());
+
+            //BankAccounts
+            context.BankAccounts.RemoveRange(context.BankAccounts.ToList());
+
+            //Donations
+            context.Donations.RemoveRange(context.Donations.ToList());
+
+            //Payments
+            context.Payments.RemoveRange(context.Payments.ToList());
+
+            //PopImages
+            context.POPImages.RemoveRange(context.POPImages.ToList());
+
+            //WaitingTickets
+            context.WaitingList.RemoveRange(context.WaitingList.ToList());
+            
+
             //  This method will be called after migrating to the latest version.
 
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method 

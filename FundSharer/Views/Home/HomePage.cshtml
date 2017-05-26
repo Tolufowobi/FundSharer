@@ -25,14 +25,21 @@
                     <div class="panel-body">
                         <div class="text-info">
                             <dl class="dl-horizontal">
+                                @{ 
+                                    var FirstName = ViewBag.FirstName;
+                                    var LastName = ViewBag.LastName;
+                                    var PhoneNumber = ViewBag.PhoneNumber;
+                                    var Email = ViewBag.EMailAddress;
+                                }
                                 <dt>@Html.Label("First Name:")</dt>
-                                <dd>@Html.DisplayText((string)ViewBag.FirstName)</dd>
+                                
+                                <dd>@Html.DisplayTextFor(m => FirstName)</dd>
                                 <dt>@Html.Label("Last Name:")</dt>
-                                <dd>@Html.DisplayText((string)ViewBag.LastName)</dd>
+                                <dd>@Html.DisplayTextFor(m => LastName)</dd>
                                 <dt>@Html.Label("Phone Number:")</dt>
-                                <dd>@Html.DisplayText((string)ViewBag.PhoneNumber)</dd>
+                                <dd>@Html.DisplayTextFor(m => PhoneNumber)</dd>
                                 <dt>@Html.Label("Email Address:")</dt>
-                                <dd>@Html.DisplayText((string)ViewBag.EmailAddress)</dd>
+                                <dd>@Html.DisplayTextFor(m => Email)</dd>
                             </dl>
                         </div>
                     </div>
@@ -46,7 +53,7 @@
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Your Account Details</a>
                     </h3>
                 </div>
-                <div id="collapse1" class="panel-collapse collapse">
+                <div id="collapse1" class="panel-collapse collapse in">
                     <div class="panel-body">
                         @{ BankAccount Accountdetails = ViewBag.AccountDetails;}
                         @Html.Partial("_AccountDetails", Accountdetails)
@@ -61,18 +68,18 @@
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Your Pending Incoming Donations</a>
                     </h3>
                 </div>
-                <div id="collapse2" class="panel-collapse collapse">
+                <div id="collapse2" class="panel-collapse collapse in">
                     <div class="panel-body">
                         @{ List<Donation> PendingIncomingDonations = ViewBag.PendingIncomingDonations;}
                         @{ List<Payment> PendingIncomingPayments = ViewBag.PendingIncomingPayments;}
                         <div class="text-info">
-                            <table class="table-striped">
+                            <table class="table table-striped">
                                 <thead>
                                     <tr>
-                                        <td>Match Date</td>
-                                        <td>Donor Name</td>
-                                        <td>Payment Date</td>
-                                        <td>Status</td>
+                                        <th>Match Date</th>
+                                        <th>Donor Name</th>
+                                        <th>Payment Date</th>
+                                        <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -127,34 +134,41 @@
                 <div id="collapse3" class="panel-collapse collapse in">
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-md-6" id="Change">
-                                @{ Donation Donation = ViewBag.PendingOutgoingDonation;}
+                                @{ Donation Donation = ViewBag.PendingOutgoingDonation;
+                                    Payment pay = ViewBag.PendingOutgoingPayment;}
                                 @if (Donation != null)
                                 {
-                                    Html.Partial("_DonationDetails", Donation);
-                                }
-                                else
+                                    <div class="col-md-6">
+                                        @Html.Partial("_DonationDetails", Donation);
+                                    </div>
+                                    <div class="col-md-6">
+                                        @if (pay != null)
+                                        {
+
+                                        Html.Partial("_PaymentDetails", pay);
+                                        }
+                                        else
+                                        {
+                                            using (Html.BeginForm("UploadPaymentInfo", "Payments", new { Donation.Id }, FormMethod.Get))
+                                            {
+                                                <input type="submit" class="btn btn-primary" value="Upload Payment" />
+                                            }
+                                        }
+                                    </div>
+
+                            }
+                            else
+                            { 
+                            <div class="col-md-6" id="Change">
+                                @using (Ajax.BeginForm("FindAMatch", new AjaxOptions { HttpMethod = "post", InsertionMode = InsertionMode.Replace, UpdateTargetId = "Change", }))
                                 {
-                                    using (Ajax.BeginForm("FindAMatch", new AjaxOptions { HttpMethod = "post", InsertionMode = InsertionMode.Replace, UpdateTargetId = "Change", }))
-                                    {
-                                        <input type="submit" class="btn btn-primary" value="Find a Match" />
-                                    }
+                                <input type="submit" class="btn btn-primary" value="Find a Match" />
                                 }
                             </div>
                             <div class="col-md-6">
-                                @{Payment Pay = ViewBag.PendingOutgoingPayment;}
-                                @if (Pay != null)
-                                {
-                                    Html.Partial("_PaymentDetails", Pay);
-                                }
-                                else
-                                {
-                                    using (Html.BeginForm("UploadPaymentInfo", "Payments", new { Pay.Id }, FormMethod.Get))
-                                    {
-                                        <input type="submit" class="btn btn-primary" value="Upload Payment" />
-                                    }
-                                }
+                                <input type="button" class="btn btn-default" disabled="disabled" value="Upload Payment" />
                             </div>
+                            }
                         </div>
                     </div>
                 </div>
@@ -182,7 +196,7 @@
                         <a data-toggle="collapse" data-parent="#accordion" href="#collapse5">Here are the past payments you have made</a>
                     </h3>
                 </div>
-                <div id="collapse5" class="panel-collapse collapse">
+                <div id="collapse5" class="panel-collapse collapse in">
                     <div class="panel-body">
                         @{ List<Payment> OutgoingPayments = ViewBag.OutgoingPayments;}
                         @Html.Partial("_PaymentList", OutgoingPayments)

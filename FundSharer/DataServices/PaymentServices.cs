@@ -121,14 +121,18 @@ namespace FundSharer.DataServices
                 {
                     foreach (WaitingTicket t in AccountTickets)
                     {
-                        foreach (Donation d in t.Donations)
+                        if (t.Donations.Count() > 0)
                         {
-                            Payment p = GetPaymentForDonation(d);
-                            if (IsNotNull(p))
+                            foreach (Donation d in t.Donations)
                             {
-                                IncomingPaymentsList.Add(p);
+                                Payment p = GetPaymentForDonation(d);
+                                if (IsNotNull(p))
+                                {
+                                    IncomingPaymentsList.Add(p);
+                                }
                             }
                         }
+                        
                     }
                 }
             }

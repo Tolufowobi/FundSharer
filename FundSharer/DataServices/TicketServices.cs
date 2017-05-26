@@ -123,9 +123,12 @@ namespace FundSharer.DataServices
 
         public static bool ExistInRecord(WaitingTicket ticket)
         {
-            ApplicationDbContext db = new ApplicationDbContext();
-            var testaccount = db.WaitingList.Find(ticket.Id);
-            return IsNotNull(testaccount);
+            using (ApplicationDbContext db = new ApplicationDbContext())
+            {
+                var testaccount = db.WaitingList.Find(ticket.Id);
+                return IsNotNull(testaccount);
+            }
+                
         }
         #endregion
 

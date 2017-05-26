@@ -38,7 +38,7 @@ namespace FundSharer.DataServices
                 {
                     //check that the specified account doesn't exist...
                     //bank accounts should have a unique id, and bank name and account number combination
-                    int testCount = (from a in db.BankAccounts where a.Id == NewAccount.Id || (a.AccountNumber == NewAccount.AccountNumber && a.AccountTitle == NewAccount.AccountTitle) select a.Id).Count();
+                    int testCount = (from a in db.BankAccounts where a.Id == NewAccount.Id || (a.AccountNumber == NewAccount.AccountNumber && a.AccountTitle == NewAccount.AccountTitle) || a.Owner.Id == NewAccount.OwnerId select a.Id).Count();
                     if (testCount == 0)// if the account doesn't exist, create it
                     {
                         db.BankAccounts.Add(NewAccount);
