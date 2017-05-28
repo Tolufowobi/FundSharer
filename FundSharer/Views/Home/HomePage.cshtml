@@ -136,7 +136,13 @@
                         <div class="row">
                                 @{ Donation Donation = ViewBag.PendingOutgoingDonation;
                                     Payment pay = ViewBag.PendingOutgoingPayment;}
-                                @if (Donation != null)
+                            @if (Accountdetails.IsReciever == true)
+                            {
+                                <div class="text-center text-info">Waiting for donation(s)...</div>
+                            }
+                            else
+                            {
+                                if (Donation != null)
                                 {
                                     <div class="col-md-6">
                                         @Html.Partial("_DonationDetails", Donation);
@@ -145,7 +151,7 @@
                                         @if (pay != null)
                                         {
 
-                                        Html.Partial("_PaymentDetails", pay);
+                                            Html.Partial("_PaymentDetails", pay);
                                         }
                                         else
                                         {
@@ -156,19 +162,20 @@
                                         }
                                     </div>
 
-                            }
-                            else
-                            { 
-                            <div class="col-md-6" id="Change">
-                                @using (Ajax.BeginForm("FindAMatch", new AjaxOptions { HttpMethod = "post", InsertionMode = InsertionMode.Replace, UpdateTargetId = "Change", }))
-                                {
-                                <input type="submit" class="btn btn-primary" value="Find a Match" />
                                 }
-                            </div>
-                            <div class="col-md-6">
-                                <input type="button" class="btn btn-default" disabled="disabled" value="Upload Payment" />
-                            </div>
-                            }
+                                else
+                                {
+                                    <div class="col-md-6" id="Change">
+                                        @using (Ajax.BeginForm("FindAMatch", new AjaxOptions { HttpMethod = "post", InsertionMode = InsertionMode.Replace, UpdateTargetId = "Change", }))
+                                        {
+                                            <input type="submit" class="btn btn-primary" value="Find a Match" />
+                                        }
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="button" class="btn btn-default" disabled="disabled" value="Upload Payment" />
+                                    </div>
+                                }
+                            }  
                         </div>
                     </div>
                 </div>

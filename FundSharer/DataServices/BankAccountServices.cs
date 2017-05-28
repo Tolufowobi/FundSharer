@@ -5,6 +5,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using System.Collections.Generic;
+using System.Data.Entity;
 
 namespace FundSharer.DataServices
 {
@@ -24,7 +25,7 @@ namespace FundSharer.DataServices
             BankAccount Acc = null;
             using (ApplicationDbContext db = new ApplicationDbContext())
             {
-                Acc = (from ba in db.BankAccounts where ba.OwnerId == AUser.Id select ba).First();
+                Acc = (from ba in db.BankAccounts where ba.OwnerId == AUser.Id select ba).FirstOrDefault();
             }
             return Acc;
         }
@@ -41,8 +42,14 @@ namespace FundSharer.DataServices
                     int testCount = (from a in db.BankAccounts where a.Id == NewAccount.Id || (a.AccountNumber == NewAccount.AccountNumber && a.AccountTitle == NewAccount.AccountTitle) || a.Owner.Id == NewAccount.OwnerId select a.Id).Count();
                     if (testCount == 0)// if the account doesn't exist, create it
                     {
-                        db.BankAccounts.Add(NewAccount);
-                        db.SaveChanges();
+                        //check that its referenced entity is not null and ensure that its state is defined as unchanged to 
+                        //avoid record duplication
+                        if (NewAccount.Owner != null)
+                        {
+                            db.Entry(NewAccount.Owner).State = EntityState.Unchanged;
+                            db.BankAccounts.Add(NewAccount);
+                            db.SaveChanges();
+                        }
                     }
                 }
             }
@@ -56,6 +63,7 @@ namespace FundSharer.DataServices
                 {
                     using (ApplicationDbContext db = new ApplicationDbContext())
                     {
+
                         db.BankAccounts.Remove(DeletedAccount);
                         db.SaveChanges();
                     }

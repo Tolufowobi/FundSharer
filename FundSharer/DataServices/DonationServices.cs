@@ -25,18 +25,21 @@ namespace FundSharer.DataServices
         //Get a donation package for a new donor
         static public void AddDonation(Donation NewDonation)
         {
-            Donation Donation = null;
 
             if (IsNotNull(NewDonation))// Ensure the specified donation object is not null
             {
                 //Ensure that the donation does not exist in the database
                 if (!ExistInRecord(NewDonation))
                 {
-                    using (ApplicationDbContext db = new ApplicationDbContext())
-                    {
-                        Donation = NewDonation;
-                        db.Donations.Add(Donation);
-                        db.SaveChanges();
+                    if (TicketServices.IsNotNull(NewDonation.Ticket) && BankAccountServices.IsNotNull(NewDonation.Donor))
+                    { 
+                        using (ApplicationDbContext db = new ApplicationDbContext())
+                        {
+                            db.Entry(NewDonation.Ticket).State = EntityState.Unchanged;
+                            db.Entry(NewDonation.Donor).State = EntityState.Unchanged;
+                            db.Donations.Add(NewDonation);
+                            db.SaveChanges();
+                        }
                     }
                 }
             }

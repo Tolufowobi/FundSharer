@@ -1,6 +1,7 @@
 ﻿using FundSharer.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
@@ -24,12 +25,24 @@ namespace FundSharer.DataServices
                 if (!ExistInRecord(NewTicket))// ensure that no ticket in the database exists with the specified ticket id
                 {
                     //check the ticket has no pending donations... if not, add the ticket to the database and save the changes
-                    if (NewTicket.Donations.Count() == 0)
+                    if (NewTicket.Donations == null)
                     {
-                        using (ApplicationDbContext db = new ApplicationDbContext())
+                        if ( BankAccountServices.IsNotNull(NewTicket.TicketHolder))
                         {
-                            db.WaitingList.Add(NewTicket);
-                            db.SaveChanges();
+                            using (ApplicationDbContext db = new ApplicationDbContext())
+                            {
+                                if (NewTicket.TicketHolder.IsReciever == false)
+                                {
+                                    NewTicket.TicketHolder.IsReciever = true;
+                                    db.Entry(NewTicket.TicketHolder).State = EntityState.Modified;
+                                }
+                                else
+                                {
+                                    db.Entry(NewTicket.TicketHolder).State = EntityState.Unchanged;
+                                }
+                                db.WaitingList.Add(NewTicket);
+                                db.SaveChanges();
+                            }
                         }
                     }
                 }
@@ -59,7 +72,7 @@ namespace FundSharer.DataServices
                 {
                     using (ApplicationDbContext db = new ApplicationDbContext())
                     {
-                        db.Entry(UpdateTicket).State = System.Data.Entity.EntityState.Modified;
+                        db.Entry(UpdateTicket).State = EntityState.Modified;
                         db.SaveChanges();
                     }
                 }

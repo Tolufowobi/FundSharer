@@ -1,6 +1,7 @@
 ﻿using FundSharer.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
@@ -15,10 +16,14 @@ namespace FundSharer.DataServices
             {
                 if (!ExistInRecord(NewImg))
                 {
-                    using (ApplicationDbContext db = new ApplicationDbContext())
-                    {
-                        db.POPImages.Add(NewImg);
-                        db.SaveChanges();
+                    if(PaymentServices.IsNotNull(NewImg.Payment))
+                    { 
+                        using (ApplicationDbContext db = new ApplicationDbContext())
+                        {
+                            db.Entry(NewImg.Payment).State = EntityState.Unchanged;
+                            db.POPImages.Add(NewImg);
+                            db.SaveChanges();
+                        }
                     }
                 }
             }
@@ -47,7 +52,7 @@ namespace FundSharer.DataServices
                 {
                     using (ApplicationDbContext db = new ApplicationDbContext())
                     {
-                        db.Entry(UpdateImg).State = System.Data.Entity.EntityState.Modified;
+                        db.Entry(UpdateImg).State = EntityState.Modified;
                         db.SaveChanges();
                     }
                 }

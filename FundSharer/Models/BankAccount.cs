@@ -23,7 +23,7 @@ namespace FundSharer.Models
 
         [Required]
         public string OwnerId { get; set; }       
-        public ApplicationUser Owner { get; set; }
+        public virtual ApplicationUser Owner { get; set; }
 
         [Display(Name = "Can Recieve Donations")]
         public bool IsReciever { get; set; }

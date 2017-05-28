@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using FundSharer.Models;
+using System.Data.Entity;
 
 namespace FundSharer.DataServices
 {
@@ -23,7 +24,7 @@ namespace FundSharer.DataServices
                 if (!ExistInRecord(NewPayment))
                 {
                     //Ensure the donation property associated with the payment is not null or open
-                    if (NewPayment.DonationPack != null)
+                    if ( DonationServices.IsNotNull(NewPayment.DonationPack))
                     {
                         if (NewPayment.DonationPack.IsOpen == false)
                         {
@@ -31,6 +32,7 @@ namespace FundSharer.DataServices
                             {
                                 using (ApplicationDbContext db = new ApplicationDbContext())
                                 {
+                                    db.Entry(NewPayment.DonationPack).State = EntityState.Unchanged;
                                     db.Payments.Add(NewPayment);
                                     db.SaveChanges();
                                 }
@@ -65,7 +67,7 @@ namespace FundSharer.DataServices
                 {
                     using (ApplicationDbContext db = new ApplicationDbContext())
                     {
-                        db.Entry(UpdatePay).State = System.Data.Entity.EntityState.Modified;
+                        db.Entry(UpdatePay).State = EntityState.Modified;
                         db.SaveChanges();
                     }
                 }
@@ -121,7 +123,7 @@ namespace FundSharer.DataServices
                 {
                     foreach (WaitingTicket t in AccountTickets)
                     {
-                        if (t.Donations.Count() > 0)
+                        if (t.Donations != null)
                         {
                             foreach (Donation d in t.Donations)
                             {

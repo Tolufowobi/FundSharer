@@ -229,6 +229,10 @@
     <Compile Include="Migrations\201705261844259_ModifiedTransactionModels.Designer.cs">
       <DependentUpon>201705261844259_ModifiedTransactionModels.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201705280459414_WaitingTicketModified.cs" />
+    <Compile Include="Migrations\201705280459414_WaitingTicketModified.Designer.cs">
+      <DependentUpon>201705280459414_WaitingTicketModified.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AdminAccount.cs" />
@@ -365,6 +369,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201705261844259_ModifiedTransactionModels.resx">
       <DependentUpon>201705261844259_ModifiedTransactionModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705280459414_WaitingTicketModified.resx">
+      <DependentUpon>201705280459414_WaitingTicketModified.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -1,10 +1,11 @@
-﻿using FundSharer.Models;
-using FundSharer.DataServices;
+﻿using FundSharer.DataServices;
+using FundSharer.Models;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 
 namespace FundSharer.Controllers
@@ -103,7 +104,10 @@ namespace FundSharer.Controllers
 
         public ActionResult FindAMatch()
         {
-            BankAccount donor = BankAccountServices.GetUserBankAccount((ApplicationUser)User);
+            var usermanager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            string userId = User.Identity.GetUserId();
+            ApplicationUser Appuser = usermanager.Users.First(m => m.Id == userId);
+            BankAccount donor = BankAccountServices.GetUserBankAccount(Appuser);
             WaitingTicket ticket = TicketServices.PopOutTopTicket();
             Donation NewDonation = null;
 
@@ -113,7 +117,7 @@ namespace FundSharer.Controllers
                 {
                     Donor = donor,
                     IsOpen = false,
-                    Ticket = ticket,
+                    TicketId = ticket.Id,
                     CreationDate = DateTime.Now
                 };
             }

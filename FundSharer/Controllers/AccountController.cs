@@ -174,7 +174,7 @@ namespace FundSharer.Controllers
                         AccountTitle = model.AccountTitle,
                         Bank = model.BankName,
                         IsReciever = false,
-                        OwnerId = user.Id,
+                        Owner = user
                     };
                     BankAccountServices.AddBankAccount(NewbankAccount);
 
@@ -188,7 +188,7 @@ namespace FundSharer.Controllers
                         //Create its ticket
                         WaitingTicket Ticket = new WaitingTicket
                         {
-//TicketHolderId = NewbankAccount.Id,
+                            TicketHolder = NewbankAccount,
                             EntryDate = DateTime.Now
                         };
                         TicketServices.AddTicket(Ticket);
