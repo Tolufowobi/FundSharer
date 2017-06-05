@@ -12,10 +12,8 @@ namespace FundSharer.DataServices
 
         public static WaitingTicket GetTicketById(string TicketId)
         {
-            using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                return db.WaitingList.Find(TicketId);
-            }
+                return DbAccessHandler.DbContext.WaitingList.Find(TicketId);
+            
         }
 
         public static void AddTicket(WaitingTicket NewTicket)
@@ -29,20 +27,10 @@ namespace FundSharer.DataServices
                     {
                         if ( BankAccountServices.IsNotNull(NewTicket.TicketHolder))
                         {
-                            using (ApplicationDbContext db = new ApplicationDbContext())
-                            {
-                                if (NewTicket.TicketHolder.IsReciever == false)
-                                {
-                                    NewTicket.TicketHolder.IsReciever = true;
-                                    db.Entry(NewTicket.TicketHolder).State = EntityState.Modified;
-                                }
-                                else
-                                {
-                                    db.Entry(NewTicket.TicketHolder).State = EntityState.Unchanged;
-                                }
-                                db.WaitingList.Add(NewTicket);
-                                db.SaveChanges();
-                            }
+                            DbAccessHandler.DbContext.Entry(NewTicket.TicketHolder).State = EntityState.Unchanged;
+                            DbAccessHandler.DbContext.WaitingList.Add(NewTicket);
+                            DbAccessHandler.DbContext.SaveChanges();
+                            
                         }
                     }
                 }
@@ -55,11 +43,8 @@ namespace FundSharer.DataServices
             {
                 if (ExistInRecord(DeleteTicket))
                 {
-                    using (ApplicationDbContext db = new ApplicationDbContext())
-                    {
-                        db.WaitingList.Remove(DeleteTicket);
-                        db.SaveChanges();
-                    }
+                    DbAccessHandler.DbContext.WaitingList.Remove(DeleteTicket);
+                    DbAccessHandler.DbContext.SaveChanges();
                 }
             }
         }
@@ -70,11 +55,9 @@ namespace FundSharer.DataServices
             {
                 if (ExistInRecord(UpdateTicket))
                 {
-                    using (ApplicationDbContext db = new ApplicationDbContext())
-                    {
-                        db.Entry(UpdateTicket).State = EntityState.Modified;
-                        db.SaveChanges();
-                    }
+                    DbAccessHandler.DbContext.Entry(UpdateTicket).State = EntityState.Modified;
+                    DbAccessHandler.DbContext.SaveChanges();
+                    
                 }
             }
         }
@@ -82,13 +65,11 @@ namespace FundSharer.DataServices
         public static WaitingTicket PopOutTopTicket()
         {
             WaitingTicket ticket = null;
-
-            using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                if (db.WaitingList.Count() > 0) // if there are tickets in the waiting list
+            
+                if (DbAccessHandler.DbContext.WaitingList.Count() > 0) // if there are tickets in the waiting list
                 {
                     // get a list tickest of with less than 2 donations
-                    List<WaitingTicket> NeedsDonorList = (from t in db.WaitingList where t.Donations.Count() < 2 select t).ToList();
+                    List<WaitingTicket> NeedsDonorList = (from t in DbAccessHandler.DbContext.WaitingList where t.Donations.Count() < 2 select t).ToList();
                     // if there are tickets that fit the specified criteria, select the last ticket on the list..
                     //i.e the oldest ticket on the list
                     if (NeedsDonorList.Count() > 0)
@@ -96,7 +77,7 @@ namespace FundSharer.DataServices
                         ticket = NeedsDonorList.Last();
                     }
                 }
-            }
+            
             return ticket;
         }
 
@@ -108,10 +89,8 @@ namespace FundSharer.DataServices
             {
                 if (BankAccountServices.ExistInRecord(Account))
                 {
-                    using (ApplicationDbContext db = new ApplicationDbContext())
-                    {
-                        TicketList = (from t in db.WaitingList where t.TicketHolderId == Account.Id select t).ToList();
-                    }
+                        TicketList = (from t in DbAccessHandler.DbContext.WaitingList where t.TicketHolder.Id == Account.Id select t).ToList();
+                    
                 }
             }
             return TicketList;
@@ -119,10 +98,8 @@ namespace FundSharer.DataServices
 
         public static List<WaitingTicket> GetTickets()
         {
-            using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                return db.WaitingList.ToList();
-            }
+                return DbAccessHandler.DbContext.WaitingList.ToList();
+            
         }
 
         #region Helpers
@@ -136,11 +113,9 @@ namespace FundSharer.DataServices
 
         public static bool ExistInRecord(WaitingTicket ticket)
         {
-            using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                var testaccount = db.WaitingList.Find(ticket.Id);
+                var testaccount = DbAccessHandler.DbContext.WaitingList.Find(ticket.Id);
                 return IsNotNull(testaccount);
-            }
+            
                 
         }
         #endregion

@@ -14,7 +14,7 @@ namespace FundShare.Controllers
     [Authorize]
     public class PaymentsController : Controller
     {
-        private ApplicationDbContext db = new ApplicationDbContext();
+        private ApplicationDbContext db = DbAccessHandler.DbContext;
 
         // GET: Payments
         public ActionResult Index()
@@ -117,9 +117,9 @@ namespace FundShare.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult UploadPaymentInfo(string DonationId)
+        public ActionResult UploadPaymentInfo(string Id)
         {
-            Donation donation = DonationServices.GetDonationById(DonationId);
+            Donation donation = DonationServices.GetDonationById(Id);
                 if (donation != null)
                 {
                     PaymentDetails details = new PaymentDetails
@@ -180,7 +180,7 @@ namespace FundShare.Controllers
 
         //Get
         [ValidateAntiForgeryToken]
-        public ActionResult ConfirmPayment(String PaymentId)
+        public ActionResult ConfirmPayment(String Id)
         {
             Payment pay = PaymentServices.GetPaymentById(PaymentId);
 
@@ -201,9 +201,9 @@ namespace FundShare.Controllers
         //POST
         [HttpPost]
         [ActionName("ConfirmPayment")]
-        public ActionResult PaymentConfirmed(string PaymentId)
+        public ActionResult PaymentConfirmed(string Id)
         {
-            var pay = PaymentServices.GetPaymentById(PaymentId);
+            var pay = PaymentServices.GetPaymentById(Id);
             //confirm the payment on the back end
             pay.Confirmed = true;
             PaymentServices.UpdatePayment(pay);

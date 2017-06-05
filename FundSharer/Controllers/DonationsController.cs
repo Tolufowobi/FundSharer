@@ -16,6 +16,7 @@ namespace FundSharer.Controllers
     using System.Web;
     using System.Web.Mvc;
     using FundSharer.Models;
+    using DataServices;
     using Microsoft.AspNet.Identity;
     using Microsoft.Ajax.Utilities;
 
@@ -23,7 +24,7 @@ namespace FundSharer.Controllers
     {
         public class DonationsController : Controller
         {
-            private ApplicationDbContext db = new ApplicationDbContext();
+            private ApplicationDbContext db = DbAccessHandler.DbContext;
 
             // GET: Donations
             public async Task<ActionResult> Index()

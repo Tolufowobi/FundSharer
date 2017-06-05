@@ -39,7 +39,7 @@ namespace FundSharer.Models
     {
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
-        {
+        { 
         }
 
         public DbSet<BankAccount> BankAccounts { get; set; }

@@ -11,10 +11,8 @@ namespace FundSharer.DataServices
     {
         public static Payment GetPaymentById(string PaymentId)
         {
-            using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                return db.Payments.Find(PaymentId);
-            }
+                return DbAccessHandler.DbContext.Payments.Find(PaymentId);
+            
         }
 
         public static void AddPayment(Payment NewPayment)
@@ -30,12 +28,9 @@ namespace FundSharer.DataServices
                         {
                             if (!IsNotNull(GetPaymentForDonation(NewPayment.DonationPack))) // Ensure it doesn't not have any other payment associated with it
                             {
-                                using (ApplicationDbContext db = new ApplicationDbContext())
-                                {
-                                    db.Entry(NewPayment.DonationPack).State = EntityState.Unchanged;
-                                    db.Payments.Add(NewPayment);
-                                    db.SaveChanges();
-                                }
+                                DbAccessHandler.DbContext.Entry(NewPayment.DonationPack).State = EntityState.Unchanged;
+                                DbAccessHandler.DbContext.Payments.Add(NewPayment);
+                                DbAccessHandler.DbContext.SaveChanges();
                             }
                         }
                     }
@@ -50,11 +45,8 @@ namespace FundSharer.DataServices
             {
                 if (ExistInRecord(DeletedPayment))
                 {
-                    using (ApplicationDbContext db = new ApplicationDbContext())
-                    {
-                        db.Payments.Remove(DeletedPayment);
-                        db.SaveChanges();
-                    }
+                    DbAccessHandler.DbContext.Payments.Remove(DeletedPayment);
+                    DbAccessHandler.DbContext.SaveChanges();
                 }
             }
         }
@@ -65,7 +57,7 @@ namespace FundSharer.DataServices
             {
                 if (ExistInRecord(UpdatePay))
                 {
-                    using (ApplicationDbContext db = new ApplicationDbContext())
+                    using (var db = DbAccessHandler.DbContext)
                     {
                         db.Entry(UpdatePay).State = EntityState.Modified;
                         db.SaveChanges();
@@ -80,14 +72,12 @@ namespace FundSharer.DataServices
 
             if (DonationServices.IsNotNull(donation))
             {
-                using (ApplicationDbContext db = new ApplicationDbContext())
-                {
-                    var pay = (from p in db.Payments where p.DonationPackId == donation.Id select p).FirstOrDefault();
+                    var pay = (from p in DbAccessHandler.DbContext.Payments where p.DonationPackId == donation.Id select p).FirstOrDefault();
                     if (pay != null)
                     {
                         donationPay = pay;
                     }
-                }
+                
             }
             return donationPay;
         }
@@ -143,10 +133,8 @@ namespace FundSharer.DataServices
 
         public static List<Payment> GetPayments()
         {
-            using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                return db.Payments.ToList();
-            }
+                return DbAccessHandler.DbContext.Payments.ToList();
+            
         }
 
         #region Helpers
@@ -160,11 +148,8 @@ namespace FundSharer.DataServices
 
         public static bool ExistInRecord(Payment payment)
         {
-            using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                var test = db.Payments.Find(payment.Id);
+                var test = DbAccessHandler.DbContext.Payments.Find(payment.Id);
                 return IsNotNull(test);
-            }
         }
         #endregion
 

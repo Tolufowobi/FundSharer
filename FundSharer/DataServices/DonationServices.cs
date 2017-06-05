@@ -16,10 +16,8 @@ namespace FundSharer.DataServices
             {
                 return null;
             }
-                using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                return db.Donations.Find(DonationId);
-            }
+                return DbAccessHandler.DbContext.Donations.Find(DonationId);
+            
         }
 
         //Get a donation package for a new donor
@@ -32,14 +30,9 @@ namespace FundSharer.DataServices
                 if (!ExistInRecord(NewDonation))
                 {
                     if (TicketServices.IsNotNull(NewDonation.Ticket) && BankAccountServices.IsNotNull(NewDonation.Donor))
-                    { 
-                        using (ApplicationDbContext db = new ApplicationDbContext())
-                        {
-                            db.Entry(NewDonation.Ticket).State = EntityState.Unchanged;
-                            db.Entry(NewDonation.Donor).State = EntityState.Unchanged;
-                            db.Donations.Add(NewDonation);
-                            db.SaveChanges();
-                        }
+                    {
+                        DbAccessHandler.DbContext.Donations.Add(NewDonation);
+                        DbAccessHandler.DbContext.SaveChanges();
                     }
                 }
             }
@@ -52,11 +45,8 @@ namespace FundSharer.DataServices
             {
                 if (ExistInRecord(DeleteDonation))
                 {
-                    using (ApplicationDbContext db = new ApplicationDbContext())
-                    {
-                        db.Donations.Remove(DeleteDonation);
-                        db.SaveChanges();
-                    }
+                    DbAccessHandler.DbContext.Donations.Remove(DeleteDonation);
+                    DbAccessHandler.DbContext.SaveChanges();
                 }
             }
         }
@@ -67,11 +57,8 @@ namespace FundSharer.DataServices
             {
                 if (ExistInRecord(UpdateDonation))
                 {
-                    using (ApplicationDbContext db = new ApplicationDbContext())
-                    {
-                        db.Entry(UpdateDonation).State = EntityState.Modified;
-                        db.SaveChanges();
-                    }
+                    DbAccessHandler.DbContext.Entry(UpdateDonation).State = EntityState.Modified;
+                    DbAccessHandler.DbContext.SaveChanges();
                 }
             }
         }
@@ -83,10 +70,8 @@ namespace FundSharer.DataServices
             {
                 if (BankAccountServices.ExistInRecord(Account))
                 {
-                    using (ApplicationDbContext db = new ApplicationDbContext())
-                    {
-                        OutgoingDonations = (from d in db.Donations where d.DonorId == Account.Id select d).ToList();
-                    }
+                        OutgoingDonations = (from d in DbAccessHandler.DbContext.Donations where d.DonorId == Account.Id select d).ToList();
+                   
                 }
             }
             return OutgoingDonations;
@@ -120,10 +105,7 @@ namespace FundSharer.DataServices
 
         public static List<Donation> GetDonations()
         {
-            using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                return db.Donations.ToList();
-            }
+                return DbAccessHandler.DbContext.Donations.ToList();
         }
 
         #region Helpers
@@ -137,11 +119,9 @@ namespace FundSharer.DataServices
 
         public static bool ExistInRecord(Donation donation)
         {
-            using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                var test = db.Donations.Find(donation.Id);
+                var test = DbAccessHandler.DbContext.Donations.Find(donation.Id);
                 return IsNotNull(test);
-            }
+            
         }
         #endregion
 

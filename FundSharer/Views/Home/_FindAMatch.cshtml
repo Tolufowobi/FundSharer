@@ -5,25 +5,38 @@
         Donation donation = ViewBag.Donation;
         <div>
             @*Recipient account details*@
-            <h3>Here's your match</h3>
-            <dl class="dl-horizontal">
-                <dt>@Html.DisplayNameFor(Model => donation.Ticket.TicketHolder.AccountTitle)</dt>
-                <dd>@Html.DisplayFor(Model => donation.Ticket.TicketHolder.AccountTitle)</dd>
+            <h1>Here's your match</h1>
+            <div class="list-group">
+                <div class="col-md-6">
+                    <dl class="dl-horizontal">
+                        <dt>@Html.DisplayNameFor(Model => donation.Ticket.TicketHolder.AccountTitle)</dt>
+                        <dd>@Html.DisplayFor(Model => donation.Ticket.TicketHolder.AccountTitle)</dd>
 
-                <dt>@Html.DisplayNameFor(Model => donation.Ticket.TicketHolder.AccountNumber)</dt>
-                <dd>@Html.DisplayFor(Model => donation.Ticket.TicketHolder.AccountNumber)</dd>
+                        <dt>@Html.DisplayNameFor(Model => donation.Ticket.TicketHolder.AccountNumber)</dt>
+                        <dd>@Html.DisplayFor(Model => donation.Ticket.TicketHolder.AccountNumber)</dd>
 
-                <dt>@Html.DisplayNameFor(Model => donation.Ticket.TicketHolder.Bank)</dt>
-                <dd>@Html.DisplayFor(Model => donation.Ticket.TicketHolder.Bank)</dd>
+                        <dt>@Html.DisplayNameFor(Model => donation.Ticket.TicketHolder.Bank)</dt>
+                        <dd>@Html.DisplayFor(Model => donation.Ticket.TicketHolder.Bank)</dd>
 
-                <dt>@Html.DisplayNameFor(Model => donation.CreationDate):</dt>
-                <dd>@Html.DisplayFor(Model => donation.CreationDate)</dd>
+                        <dt>@Html.DisplayNameFor(Model => donation.CreationDate):</dt>
+                        <dd>@Html.DisplayFor(Model => donation.CreationDate)</dd>
 
-                <dt>@Html.Label("Payment Deadline:")</dt>
-                <dd>@(donation.CreationDate.AddDays(1).ToShortDateString())</dd>
-            </dl>
-        </div>
+                        <dt>@Html.Label("Payment Deadline:")</dt>
+                        <dd>@(donation.CreationDate.AddDays(1).ToShortDateString())</dd>
+                    </dl>
+                </div>
+            </div>
+                <div class="col-md-6">
+                    @using (Html.BeginForm("UploadPaymentInfo", "Payments", new { donation.Id }, FormMethod.Get))
+                    {
+                    <input type="submit" class="btn btn-primary" value="Upload Payment" />
+                    }
+                </div>
+            </div>
+
+        
     }
+}
     else
     {
         <div></div>

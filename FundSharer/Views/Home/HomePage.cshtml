@@ -154,8 +154,8 @@
                                             Html.Partial("_PaymentDetails", pay);
                                         }
                                         else
-                                        {
-                                            using (Html.BeginForm("UploadPaymentInfo", "Payments", new { Donation.Id }, FormMethod.Get))
+                                        { 
+                                            using (Html.BeginForm("UploadPaymentInfo", "Payments", new { Id= Donation.Id }, FormMethod.Get))
                                             {
                                                 <input type="submit" class="btn btn-primary" value="Upload Payment" />
                                             }
@@ -165,14 +165,18 @@
                                 }
                                 else
                                 {
-                                    <div class="col-md-6" id="Change">
-                                        @using (Ajax.BeginForm("FindAMatch", new AjaxOptions { HttpMethod = "post", InsertionMode = InsertionMode.Replace, UpdateTargetId = "Change", }))
-                                        {
-                                            <input type="submit" class="btn btn-primary" value="Find a Match" />
-                                        }
-                                    </div>
-                                    <div class="col-md-6">
-                                        <input type="button" class="btn btn-default" disabled="disabled" value="Upload Payment" />
+                                    <div id="Change">
+                                        <div class="col-md-6">
+
+                                            @using (Ajax.BeginForm("FindAMatch", new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "Change", }))
+                                            {
+                                                <input type="submit" class="btn btn-primary glyphicon glyphicon-search" value="Find a Match" />
+                                            }
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <input type="button" class="btn btn-default" disabled="disabled" value="Upload Payment" />
+                                        </div>
                                     </div>
                                 }
                             }  
@@ -216,13 +220,13 @@
     <p>
         @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
         @Html.ActionLink("Back to List", "Index")
-    </p>
-
-    @section Scripts{
-        <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    </p>                          
     }
-                            }
-                            else
-                            {
-                                @Html.Action("Login", "Account");
-                            }
+    else
+    {
+        @Html.Action("Login", "Account");
+    }
+
+@section scripts{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+} 

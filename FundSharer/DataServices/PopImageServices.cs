@@ -17,13 +17,11 @@ namespace FundSharer.DataServices
                 if (!ExistInRecord(NewImg))
                 {
                     if(PaymentServices.IsNotNull(NewImg.Payment))
-                    { 
-                        using (ApplicationDbContext db = new ApplicationDbContext())
-                        {
-                            db.Entry(NewImg.Payment).State = EntityState.Unchanged;
-                            db.POPImages.Add(NewImg);
-                            db.SaveChanges();
-                        }
+                    {
+                        DbAccessHandler.DbContext.Entry(NewImg.Payment).State = EntityState.Unchanged;
+                        DbAccessHandler.DbContext.POPImages.Add(NewImg);
+                        DbAccessHandler.DbContext.SaveChanges();
+                        
                     }
                 }
             }
@@ -35,11 +33,8 @@ namespace FundSharer.DataServices
             {
                 if (ExistInRecord(DeleteImg))
                 {
-                    using (ApplicationDbContext db = new ApplicationDbContext())
-                    {
-                        db.POPImages.Remove(DeleteImg);
-                        db.SaveChanges();
-                    }
+                    DbAccessHandler.DbContext.POPImages.Remove(DeleteImg);
+                    DbAccessHandler.DbContext.SaveChanges();
                 }
             }
         }
@@ -50,21 +45,15 @@ namespace FundSharer.DataServices
             {
                 if (ExistInRecord(UpdateImg))
                 {
-                    using (ApplicationDbContext db = new ApplicationDbContext())
-                    {
-                        db.Entry(UpdateImg).State = EntityState.Modified;
-                        db.SaveChanges();
-                    }
+                    DbAccessHandler.DbContext.Entry(UpdateImg).State = EntityState.Modified;
+                    DbAccessHandler.DbContext.SaveChanges();
                 }
             }
         }
 
         public static POPImage GetPopImageById(string ImageId)
         {
-            using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                return db.POPImages.Find(ImageId);
-            }
+                return DbAccessHandler.DbContext.POPImages.Find(ImageId);
         }
 
         public static POPImage GetPaymentPopImage(Payment pay)
@@ -73,24 +62,20 @@ namespace FundSharer.DataServices
 
             if (PaymentServices.IsNotNull(pay))
             {
-                using (ApplicationDbContext db = new ApplicationDbContext())
-                {
-                    var imgs = (from i in db.POPImages where i.PaymentId == pay.Id select i).ToList();
+                    var imgs = (from i in DbAccessHandler.DbContext.POPImages where i.PaymentId == pay.Id select i).ToList();
                     if (imgs.Count() > 0)
                     {
                         img = imgs.First();
                     }
-                }
+                
             }
             return img;
         }
 
         public static List<POPImage> GetPopImages()
         {
-            using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                return db.POPImages.ToList();
-            }
+                return DbAccessHandler.DbContext.POPImages.ToList();
+            
         }
 
         #region Helpers
@@ -104,11 +89,9 @@ namespace FundSharer.DataServices
 
         public static bool ExistInRecord(POPImage image)
         {
-            using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                var test = db.POPImages.Find(image.Id);
+            
+                var test = DbAccessHandler.DbContext.POPImages.Find(image.Id);
                 return IsNotNull(test);
-            }
 
         }
         #endregion

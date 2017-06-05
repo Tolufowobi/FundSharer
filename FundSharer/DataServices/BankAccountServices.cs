@@ -14,19 +14,14 @@ namespace FundSharer.DataServices
     {
         public static BankAccount GetBankAccountById(string AccountId)
         {
-            using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                return db.BankAccounts.Find(AccountId);
-            }
+           
+                return DbAccessHandler.DbContext.BankAccounts.Find(AccountId);
+            
         }
 
         static public BankAccount GetUserBankAccount(ApplicationUser AUser)
         {
-            BankAccount Acc = null;
-            using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                Acc = (from ba in db.BankAccounts where ba.OwnerId == AUser.Id select ba).FirstOrDefault();
-            }
+            BankAccount Acc = (from ba in DbAccessHandler.DbContext.BankAccounts where ba.OwnerId == AUser.Id select ba).FirstOrDefault();
             return Acc;
         }
 
@@ -35,23 +30,21 @@ namespace FundSharer.DataServices
             //Ensure that the bank account isn't null
             if (IsNotNull(NewAccount))
             {
-                using (ApplicationDbContext db = new ApplicationDbContext())
-                {
                     //check that the specified account doesn't exist...
                     //bank accounts should have a unique id, and bank name and account number combination
-                    int testCount = (from a in db.BankAccounts where a.Id == NewAccount.Id || (a.AccountNumber == NewAccount.AccountNumber && a.AccountTitle == NewAccount.AccountTitle) || a.Owner.Id == NewAccount.OwnerId select a.Id).Count();
+                    int testCount = (from a in DbAccessHandler.DbContext.BankAccounts where a.Id == NewAccount.Id || (a.AccountNumber == NewAccount.AccountNumber && a.AccountTitle == NewAccount.AccountTitle) || a.Owner.Id == NewAccount.OwnerId select a.Id).Count();
                     if (testCount == 0)// if the account doesn't exist, create it
                     {
                         //check that its referenced entity is not null and ensure that its state is defined as unchanged to 
                         //avoid record duplication
                         if (NewAccount.Owner != null)
                         {
-                            db.Entry(NewAccount.Owner).State = EntityState.Unchanged;
-                            db.BankAccounts.Add(NewAccount);
-                            db.SaveChanges();
+                        //DbAccessHandler.DbContext.Entry(NewAccount.Owner).State = EntityState.Unchanged;
+                        DbAccessHandler.DbContext.BankAccounts.Add(NewAccount);
+                        DbAccessHandler.DbContext.SaveChanges();
                         }
                     }
-                }
+                
             }
         }
 
@@ -61,9 +54,8 @@ namespace FundSharer.DataServices
             {
                 if (ExistInRecord(DeletedAccount))// if the record exists in the database, then deleted it
                 {
-                    using (ApplicationDbContext db = new ApplicationDbContext())
+                    using (var db = DbAccessHandler.DbContext)
                     {
-
                         db.BankAccounts.Remove(DeletedAccount);
                         db.SaveChanges();
                     }
@@ -77,11 +69,9 @@ namespace FundSharer.DataServices
             {
                 if (ExistInRecord(UpdatedAccount))
                 {
-                    using (ApplicationDbContext db = new ApplicationDbContext())
-                    {
-                        db.Entry(UpdatedAccount).State = System.Data.Entity.EntityState.Modified;
-                        db.SaveChanges();
-                    }
+                    DbAccessHandler.DbContext.Entry(UpdatedAccount).State = System.Data.Entity.EntityState.Modified;
+                    DbAccessHandler.DbContext.SaveChanges();
+                    
                 }
             }
         }
@@ -89,22 +79,19 @@ namespace FundSharer.DataServices
         static public AdminAccount GetAdminBankAccount(string AdminAccountId)
         {
             AdminAccount AdmAc = null;
-            using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                List<AdminAccount> List = (from adm in db.AdminAccounts where adm.Id == AdminAccountId select adm).ToList();
+            
+                List<AdminAccount> List = (from adm in DbAccessHandler.DbContext.AdminAccounts where adm.Id == AdminAccountId select adm).ToList();
                 if (List.Count() > 0)
                 {
                     AdmAc = List.First();
                 }
-            }
+            
             return AdmAc;
         }
         public static List<BankAccount> GetBankAccounts()
         {
-            using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                return db.BankAccounts.ToList();
-            }
+            DbAccessHandler.DbContext.BankAccounts.Load();
+            return DbAccessHandler.DbContext.BankAccounts.ToList(); 
         }
 
         #region Helpers
@@ -118,11 +105,8 @@ namespace FundSharer.DataServices
 
         public static bool ExistInRecord(BankAccount Account)
         {
-            using (ApplicationDbContext db = new ApplicationDbContext())
-            {
-                var test = db.BankAccounts.Find(Account.Id);
+                var test = DbAccessHandler.DbContext.BankAccounts.Find(Account.Id);
                 return IsNotNull(test);
-            }
         }
         #endregion
 

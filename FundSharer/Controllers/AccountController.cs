@@ -166,34 +166,42 @@ namespace FundSharer.Controllers
                    
                     // Create user claims - the user's first name.
                     UserManager.AddClaim(user.Id, new Claim(ClaimTypes.GivenName, user.FirstName));
-                    
-                    //create user's bank account.
-                    var NewbankAccount = new BankAccount
+                    using (var db = new ApplicationDbContext())
                     {
-                        AccountNumber = model.AccountNumber,
-                        AccountTitle = model.AccountTitle,
-                        Bank = model.BankName,
-                        IsReciever = false,
-                        Owner = user
-                    };
-                    BankAccountServices.AddBankAccount(NewbankAccount);
-
-                    //Check to see if this is the first account in the record
-                    int AccountCount = BankAccountServices.GetBankAccounts().Count();
-                    // if this is the first account, then create a ticket for it
-                    // so it is available for matching
-                    if( AccountCount == 1 )
-                    {
-                        NewbankAccount.IsReciever = true;
-                        //Create its ticket
-                        WaitingTicket Ticket = new WaitingTicket
+                        //create user's bank account.
+                        var NewbankAccount = new BankAccount
                         {
-                            TicketHolder = NewbankAccount,
-                            EntryDate = DateTime.Now
+                            AccountNumber = model.AccountNumber,
+                            AccountTitle = model.AccountTitle,
+                            Bank = model.BankName,
+                            IsReciever = false,
+                            Owner = user
                         };
-                        TicketServices.AddTicket(Ticket);
-
+                        // BankAccountServices.AddBankAccount(NewbankAccount); **
+                        db.Entry(user).State = System.Data.Entity.EntityState.Unchanged;
+                        db.BankAccounts.Add(NewbankAccount);
+                        db.SaveChanges();
+                        //Check to see if this is the first account in the record
+                        //int AccountCount = BankAccountServices.GetBankAccounts().Count(); **
+                        int AccountCount = db.BankAccounts.Count();
+                        // if this is the first account, then create a ticket for it
+                        // so it is available for matching
+                        if (AccountCount == 1)
+                        {
+                            NewbankAccount.IsReciever = true;
+                            //Create its ticket
+                            WaitingTicket Ticket = new WaitingTicket
+                            {
+                                TicketHolder = NewbankAccount,
+                                EntryDate = DateTime.Now
+                            };
+                            db.WaitingList.Add(Ticket);
+                            db.Entry(NewbankAccount).State = System.Data.Entity.EntityState.Modified;
+                            //TicketServices.AddTicket(Ticket);  **
+                            //BankAccountServices.UpdateBankAccount(NewbankAccount);  **
+                        }
                     }
+                        
 
                     await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
 
