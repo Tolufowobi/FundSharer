@@ -14,6 +14,7 @@ namespace FundSharer.Models
         [Display(Name = "Paid To")]
         public string RecipientAccountNumber { get; set; }
 
+        [DisplayFormat(DataFormatString = "{0:C0}")]
         public decimal Amount { get; set; }
 
         [Display(Name = "Payment Date")]

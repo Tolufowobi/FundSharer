@@ -220,6 +220,13 @@ namespace FundSharer.Controllers
             return View(model);
         }
 
+        //Post
+      //  [ValidateAntiForgeryToken]
+       // public PartialViewResult Edit(String Id)
+       // {
+            
+      //  }
+
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
@@ -496,6 +503,10 @@ namespace FundSharer.Controllers
             if (Url.IsLocalUrl(returnUrl))
             {
                 return Redirect(returnUrl);
+            }
+            if (User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Main", "DashBoard");
             }
             return RedirectToAction("HomePage", "Home");
         }

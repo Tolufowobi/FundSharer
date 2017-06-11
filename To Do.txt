@@ -1,3 +1,18 @@
-Create payment image upload page.
-Implement payment image upload functionality
-Implement payment confirmation functionality.
+Create payment image upload page. DONE
+Implement payment image upload functionality DONE
+Implement payment confirmation functionality.  DONE
+Confirm that accounts which have received donations are eligible to use the match making feature. DONE
+-Create a new user and bank account
+-Match it to the prime bank account
+-Upload a picture
+-Confirm payment on the prime bank account
+-Ensure that the prime bank account kind find a match too.
+Implement Account management functionality: edit personal details, edit account details, delete account.
+Implement Admin features:
+-User management
+-Report handling and resolution
+-Admin account creation
+-Model details
+Fix FindMatch partial view.
+Fix upload payment page
+Ensure that the upload payment button is disable after payment has been uploaded.

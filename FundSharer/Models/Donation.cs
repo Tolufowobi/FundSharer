@@ -15,6 +15,7 @@ namespace FundSharer.Models
 
         [Required]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         [Display(Name = "Creation Date")]
         public DateTime CreationDate { get; set; }
 

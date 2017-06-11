@@ -26,12 +26,11 @@ namespace FundSharer.DataServices
                     {
                         if (NewPayment.DonationPack.IsOpen == false)
                         {
-                            if (!IsNotNull(GetPaymentForDonation(NewPayment.DonationPack))) // Ensure it doesn't not have any other payment associated with it
-                            {
-                                DbAccessHandler.DbContext.Entry(NewPayment.DonationPack).State = EntityState.Unchanged;
+                            //if (!IsNotNull(GetPaymentForDonation(NewPayment.DonationPack))) // Ensure it doesn't not have any other payment associated with it
+                            //{
                                 DbAccessHandler.DbContext.Payments.Add(NewPayment);
                                 DbAccessHandler.DbContext.SaveChanges();
-                            }
+                            //}
                         }
                     }
                 }

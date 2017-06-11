@@ -51,7 +51,7 @@ namespace FundSharer.Controllers
             
 
             List<Donation> _pendingIncomingDonations = new List<Donation>(2);
-            List<Payment> _pendingpayments = new List<Payment>(2);
+            List<Payment> _pendingIncomingpayments = new List<Payment>(2);
 
             Donation PendingOutgoingDonation = null;
             Payment PendingOutgoingPayment = null;
@@ -71,8 +71,16 @@ namespace FundSharer.Controllers
             }
             else
             {
-                _pendingIncomingDonations = IncomingDonations.Where(m => m.IsOpen == false).ToList();
-                _pendingpayments = IncomingPayments.Where(m => m.Confirmed == false).ToList();
+                var IDnts = IncomingDonations.Where(m => m.IsOpen == false).ToList();
+                if (IDnts != null)
+                {
+                    _pendingIncomingDonations = IDnts;
+                }
+                var IPymts = IncomingPayments.Where(m => m.Confirmed == false).ToList();
+                if(IPymts != null)
+                {
+                    _pendingIncomingpayments = IPymts;
+                }
             }
 
             //Get Users personal Information
@@ -94,23 +102,60 @@ namespace FundSharer.Controllers
             ViewBag.EmailAddress = Emailaddress;
 
             //Account Information
-            ViewBag.AccountDetails = UserBankAccount;
+            ViewBag.AccountTitle = UserBankAccount.AccountTitle;
+            ViewBag.AccountNumber = UserBankAccount.AccountNumber;
+            ViewBag.BankName = UserBankAccount.Bank;
 
             //Outgoing Payments Information
-            ViewBag.OutgoingPayments = OutgoingPayments.Where(m => m.Confirmed == true).ToList();
+            ViewBag.OutgoingPayments = OutgoingPayments.Where(m => m.Confirmed == true).Select(m => m.CreationDate).ToList();
 
             //Incoming Payments Information
-            ViewBag.IncomingPayments = IncomingPayments.Where(m => m.Confirmed == true).ToList();
+            ViewBag.IncomingPayments = IncomingPayments.Where(m => m.Confirmed == true).Select(m => m.CreationDate).ToList();
 
             //Pending Donors Information
-            ViewBag.PendingIncomingDonations = _pendingIncomingDonations;
+            var PendingIncomingDonations = new List<Dictionary<string, object>>();
+            if(_pendingIncomingDonations.Count > 0)
+            {
+                foreach(Donation d in _pendingIncomingDonations)
+                {
+                    var DonationId = d.Id;
+                    var Name = d.Donor.AccountTitle;
+                    var AccountNumber = d.Donor.AccountNumber;
+                    var BankName = d.Donor.Bank;
+                    var Payment = _pendingIncomingpayments.Where(p => p.DonationPack.Id == d.Id).FirstOrDefault();
 
-            //Pending Payments Information
-            ViewBag.PendingPayments = _pendingpayments;
+                    Dictionary<string, object> set = new Dictionary<string, object>();
+                    set.Add("DonationId", DonationId);
+                    set.Add("Name", Name);
+                    set.Add("AccountNumber", AccountNumber);
+                    set.Add("BankName", BankName);
+                    if(Payment != null)
+                    {
+                        set.Add("PaymentId", Payment.Id);
+                        set.Add("Confirmed", Payment.Confirmed);
+                    }
+                    PendingIncomingDonations.Add(set);
+                }
+            }
+            ViewBag.PendingIncomingDonations = PendingIncomingDonations;
 
             //Pending Outgoing Donation View
-            ViewBag.PendingOutgoingDonation = PendingOutgoingDonation;
-
+            DonationDetails DonationDetails = new DonationDetails();
+            if (PendingOutgoingDonation != null)
+            {
+                DonationDetails.DonationId = PendingOutgoingDonation.Id;
+                DonationDetails.RecipientFullName = PendingOutgoingDonation.Ticket.TicketHolder.AccountTitle;
+                DonationDetails.RecipientAccountNumber = PendingOutgoingDonation.Ticket.TicketHolder.AccountNumber;
+                DonationDetails.DonationSetupDate = PendingOutgoingDonation.CreationDate;
+            }
+            if (PendingOutgoingPayment != null)
+            {
+                DonationDetails.PaymentId = PendingOutgoingPayment.Id;
+                DonationDetails.PaymentStatus = PendingOutgoingPayment.Confirmed;
+                DonationDetails.PaymentDate = PendingOutgoingPayment.CreationDate;
+            }
+            ViewBag.PendingOutgoingDonation = DonationDetails;
+            
             //Pending Outgoing Payment Information
             ViewBag.PendingOutgoingPayment = PendingOutgoingPayment;
             
@@ -125,7 +170,7 @@ namespace FundSharer.Controllers
             {
                 AppUser = db.Users.Find(UserId);
                 BankAccount donor = (from ba in db.BankAccounts where ba.OwnerId == AppUser.Id select ba).FirstOrDefault();
-                WaitingTicket ticket = (from t in db.WaitingList where t.Donations.Count < 2 select t).FirstOrDefault();
+                WaitingTicket ticket = (from t in db.WaitingList where t.Donations.Count < 2 orderby t.EntryDate select t).FirstOrDefault();
                 if (ticket != null)
                 {
                     Donation NewDonation = new Donation

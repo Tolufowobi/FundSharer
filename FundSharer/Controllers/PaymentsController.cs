@@ -122,7 +122,7 @@ namespace FundShare.Controllers
             Donation donation = DonationServices.GetDonationById(Id);
                 if (donation != null)
                 {
-                    PaymentDetails details = new PaymentDetails
+                    DonationDetails details = new DonationDetails
                     {
                         DonationId = donation.Id,
                         DonorBankName = donation.Donor.Bank,
@@ -145,44 +145,47 @@ namespace FundShare.Controllers
         [HttpPost]
         public ActionResult UploadPaymentInfo(HttpPostedFileBase image)
         {
-            var AppUser = new ApplicationUser() { Id = User.Identity.GetUserId() };
-            BankAccount UserBankAccount = BankAccountServices.GetUserBankAccount(AppUser);
-
-            var outgoingdonations = DonationServices.GetOutgoingAccountDonations(UserBankAccount).Where(m => m.IsOpen == false).ToList();
-            Donation donation = null;
-            if (outgoingdonations.Count() == 1)
+            if (image != null)
             {
-                donation = outgoingdonations.First();
+                using (var db = new ApplicationDbContext())
+                {
+                    var userId = User.Identity.GetUserId();
+                    var AppUser = db.Users.Find(userId);
+                    BankAccount UserBankAccount = BankAccountServices.GetUserBankAccount(AppUser);
+                    var outgoingdonations = (from d in db.Donations where d.DonorId == UserBankAccount.Id && d.IsOpen == false select d);
+                    Donation donation = null;
+                    if (outgoingdonations.Count() == 1)
+                    {
+                        donation = outgoingdonations.First();
+                    }
+                    Payment NewPay = new Payment
+                    {
+                        DonationPack = donation,
+                        CreationDate = DateTime.Now,
+                        Confirmed = false,
+                    };
+                    db.Payments.Add(NewPay);
+                    POPImage PopImg = new POPImage();
+                    PopImg.Payment = NewPay;
+                    PopImg.Image = new byte[image.ContentLength];
+                    image.InputStream.Read(PopImg.Image, 0, image.ContentLength);
+                    db.POPImages.Add(PopImg);
+                    db.SaveChanges();
+                }
+                return RedirectToAction("HomePage", "Home");
+            }
+            else
+            {
+                return HttpNotFound("Something went wrong");
             }
 
-            Payment NewPay = new Payment
-            {
-                DonationPack = donation,
-                CreationDate = DateTime.Now,
-                Confirmed = false,
-            };
-            //Add a newly created payment for the uploaded file
-            PaymentServices.AddPayment(NewPay);
-            //Save it to the database
-            //Create an image file associated with the payment from the HttpPostedFileBase object returned from the form
-            POPImage PopImg = new POPImage();
-            PopImg.Payment = NewPay;
-            PopImg.Image = new byte[image.ContentLength];
-            image.InputStream.Read(PopImg.Image, 0, image.ContentLength);
-            //Add it to the images dataset
-            PopImageServices.AddImage(PopImg);
-            //add the donor account to the waiting list
-            WaitingTicket ticket = new WaitingTicket { TicketHolder = donation.Donor, EntryDate = DateTime.Now };
-            TicketServices.AddTicket(ticket);
-
-            return RedirectToAction("HomePage", "Home");
+           
         }
 
         //Get
-        [ValidateAntiForgeryToken]
         public ActionResult ConfirmPayment(String Id)
         {
-            Payment pay = PaymentServices.GetPaymentById(PaymentId);
+            Payment pay = PaymentServices.GetPaymentById(Id);
 
             POPImage img = PopImageServices.GetPaymentPopImage(pay);
             ConfirmPaymentViewModel details = new ConfirmPaymentViewModel
@@ -201,32 +204,38 @@ namespace FundShare.Controllers
         //POST
         [HttpPost]
         [ActionName("ConfirmPayment")]
+        [ValidateAntiForgeryToken]
         public ActionResult PaymentConfirmed(string Id)
         {
-            var pay = PaymentServices.GetPaymentById(Id);
-            //confirm the payment on the back end
-            pay.Confirmed = true;
-            PaymentServices.UpdatePayment(pay);
-            //Open donation
-            pay.DonationPack.IsOpen = true;
-            DonationServices.UpdateDonations(pay.DonationPack);
-            //make the donor account available to receive donations
-            pay.DonationPack.Donor.IsReciever = true;
-            //Update donor account on the backend
-            BankAccountServices.UpdateBankAccount(pay.DonationPack.Donor);
-            // create a waiting ticket for the donor account
-            WaitingTicket donorTicket = new WaitingTicket { TicketHolder = pay.DonationPack.Donor, EntryDate = DateTime.Now, Donations = new System.Collections.Generic.List<Donation>() };
-            //Add ticket to the back end
-            TicketServices.AddTicket(donorTicket);
-
-            //Check to see if the recipient ticket has no unopened packages
-            if (pay.DonationPack.Ticket.Donations.Where(m => m.IsOpen == false).ToList().Count() == 0)// if not, make the ticket holder a reciever
+            if (Id != null)
             {
-                pay.DonationPack.Ticket.TicketHolder.IsReciever = true;
-                BankAccountServices.UpdateBankAccount(pay.DonationPack.Ticket.TicketHolder);
-            }
+                using (var db = new ApplicationDbContext())
+                {
+                    var pay = db.Payments.Find(Id);// get the payment object associated with the supplied id 
+                    if (pay.Confirmed == false)// ensure that the payment hasnt been previously confirmed.
+                    {
+                        pay.Confirmed = true; // set its confirmation status to true
+                        pay.DonationPack.IsOpen = true; // open its donation package
+                        pay.DonationPack.Donor.IsReciever = true; // set the donors receiver status to true
+                        var newticket = new WaitingTicket
+                        {
+                            TicketHolder = pay.DonationPack.Donor,
+                            TicketHolderId = pay.DonationPack.Donor.Id,
+                            EntryDate = DateTime.Now,
+                        }; // Create a ticket for the donor
+                        db.WaitingList.Add(newticket);// add the ticket to record
+                        db.SaveChanges();// save current changes
+                        if (pay.DonationPack.Ticket.Donations.Count > 1 && pay.DonationPack.Ticket.Donations.Where(m => m.IsOpen == false).Count() == 0)
+                        {//If the donation ticket has up to 2 donations and both hav been opened, change the status of the recipient.
+                            pay.DonationPack.Ticket.TicketHolder.IsReciever = false;
+                            db.SaveChanges();// save current changes
+                        }
+                    }
+                    return RedirectToAction("HomePage", "Home");
+                }
 
-            return RedirectToAction("HomePage", "Home");
+            }
+            return HttpNotFound("Record could not be found");
         }
 
         protected override void Dispose(bool disposing)

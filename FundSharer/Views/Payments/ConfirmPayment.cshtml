@@ -7,35 +7,39 @@
 
 <h2>ConfirmPayment</h2>
 
-<div class="jumbotoron">
-    <div class="form-horizontal">
-        @Html.BeginForm("ConfirmPayment", "Payments", FormMethod.Post, new { Model.PaymentId })
-        {
-        <div class="form-group">
-            <dl>
-                <dt>@Html.DisplayName(Model.DonorName))</dt>
-                <dd>@Html.Display(Model.DonorName)</dd>
+<div class="panel center-block text-info">
+    @using (Html.BeginForm("ConfirmPayment", "Payments", FormMethod.Post, new { Model.PaymentId }))
+    {
+        <div class="row">
+            @Html.AntiForgeryToken()
+            <div class="form-group col-md-6">
+                <dl class="center-block">
+                    <dt>@Html.DisplayNameFor(m => Model.DonorName)</dt>
+                    <dd>@Html.DisplayFor(m => Model.DonorName)</dd>
 
-                <dt>@Html.DisplayName(Model.RecipientAccountNumber)</dt>
-                <dd>@Html.Display(Model.RecipientAccountNumber)</dd>
 
-                <dt>@Html.DisplayName("Amount:")</dt>
-                <dd>@Html.Display(@String.Format("{0:C}", Model.Amount))</dd>
+                    <dt>@Html.DisplayNameFor(m => Model.RecipientAccountNumber)</dt>
+                    <dd>@Html.DisplayFor(m => Model.RecipientAccountNumber)</dd>
 
-                <dt>@Html.DisplayName(Model.Date)</dt>
-                <dd>@Html.Display(Model.Date)</dd>
-            </dl>
+                    <dt>@Html.DisplayName("Amount:")</dt>
+                    <dd>@Html.DisplayFor(m => Model.Amount)</dd>
+
+                    <dt>@Html.DisplayNameFor(m => Model.Date)</dt>
+                    <dd>@Html.DisplayFor(m => Model.Date)</dd>
+                </dl>
+            </div>
+            <div class="form-group col-md-6">
+                @{
+                    var base64 = Convert.ToBase64String(Model.POPimage, 0, Model.POPimage.Length);
+                    var imgsrc = String.Format("data:image/jpg;base64,{0}", base64);
+                }
+                <img src='@imgsrc' class="img-responsive media-middle"/>
+            </div>
         </div>
-        <div class="form-group">
-            @{
-                var base64 = Convert.ToBase64String(Model.POPimage, 0, Model.POPimage.Length);
-                var imgsrc = String.Format("data:image/jpg;base64,{0}", base64);
-            }
-            <img src='@imgsrc' class="img-responsive" />
-        </div>
-        <div class="form-group">
+        <div class="row">
+            <div class="form-group center-block">
             <input type="submit" class="btn-primary glyphicon glyphicon-check" value="Confirm" />
+            </div>
         </div>
-        }
-    </div>
+     }
 </div>

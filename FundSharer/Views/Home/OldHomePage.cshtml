@@ -1,0 +1,245 @@
+﻿
+@{
+    ViewBag.Title = "OldHomePage";
+}
+
+<h2>OldHomePage</h2>
+
+
+
+<div class="container">
+    <div class="navbar"><h4>Hi there, @Fname !</h4></div>
+
+
+    <div class="panel-group" id="accordion">
+
+        @*Personal Information summary*@
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse0">Personal Information</a>
+                </h3>
+            </div>
+            <div id="collapse0" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <div class="text-info">
+                        <dl class="dl-horizontal">
+                            @{
+                                var FirstName = ViewBag.FirstName;
+                                var LastName = ViewBag.LastName;
+                                var PhoneNumber = ViewBag.PhoneNumber;
+                                var Email = ViewBag.EMailAddress;
+                            }
+                            <dt>@Html.Label("First Name:")</dt>
+
+                            <dd>@Html.DisplayTextFor(m => FirstName)</dd>
+                            <dt>@Html.Label("Last Name:")</dt>
+                            <dd>@Html.DisplayTextFor(m => LastName)</dd>
+                            <dt>@Html.Label("Phone Number:")</dt>
+                            <dd>@Html.DisplayTextFor(m => PhoneNumber)</dd>
+                            <dt>@Html.Label("Email Address:")</dt>
+                            <dd>@Html.DisplayTextFor(m => Email)</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*Account Details*@
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Your Account Details</a>
+                </h3>
+            </div>
+            <div id="collapse1" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    @{ BankAccount Accountdetails = ViewBag.AccountDetails;}
+                    @Html.Partial("_AccountDetails", Accountdetails)
+                </div>
+            </div>
+        </div>
+
+        @*Pending incoming Donations*@
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Your Pending Incoming Donations</a>
+                </h3>
+            </div>
+            <div id="collapse2" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    @{ List<Donation> PendingIncomingDonations = ViewBag.PendingIncomingDonations;}
+                    @{ List<Payment> PendingIncomingPayments = ViewBag.PendingIncomingPayments;}
+                    <div class="text-info">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Match Date</th>
+                                    <th>Donor Name</th>
+                                    <th>Payment Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    @if (PendingIncomingDonations.Count() > 0)
+                                    {
+                                        foreach (Donation d in PendingIncomingDonations)
+                                        {
+                                            <td>@Html.DisplayFor(model => d.CreationDate)</td>
+                                            <td>@Html.DisplayFor(model => d.Donor.AccountTitle)</td>
+
+                                            Payment p = PendingIncomingPayments.Where(m => m.DonationPack.Id == d.Id).FirstOrDefault();
+                                            if (p != null)
+                                            {
+                                                <td>@Html.DisplayFor(m => p.CreationDate)</td>
+                                                <td>
+                                                    @if (p.Confirmed == false)
+                                                    {
+                                                        using (Html.BeginForm("ConfirmPayment", "Payments", new { p.Id }, FormMethod.Get))
+                                                        {
+                                                            <input type="submit" class=" btn btn-primary" value="Confirm Payment" />
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="text-info"><text>Confirmed.</text></div>
+                                                    }
+                                                </td>
+                                            }
+                                            else
+                                            {
+                                                <td>-</td>
+                                                <td>-</td>
+                                            }
+
+                                        }
+                                    }
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*Pending outgoing donation*@
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Donate</a>
+                </h3>
+            </div>
+            <div id="collapse3" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    <div class="row">
+                        @{ Donation Donation = ViewBag.PendingOutgoingDonation;
+                            Payment pay = ViewBag.PendingOutgoingPayment;}
+                        @if (Accountdetails.IsReciever == true)
+                        {
+                            <div class="text-center text-info">Waiting for donation(s)...</div>
+                        }
+                        else
+                        {
+                            if (Donation != null)
+                            {
+                                <div class="col-md-6">
+                                    @Html.Partial("_DonationDetails", Donation);
+                                </div>
+                                <div class="col-md-6">
+                                    @if (pay != null)
+                                    {
+
+                                        Html.Partial("_PaymentDetails", pay);
+                                    }
+                                    else
+                                    {
+                                        using (Html.BeginForm("UploadPaymentInfo", "Payments", new { Id = Donation.Id }, FormMethod.Get))
+                                        {
+                                            <input type="submit" class="btn btn-primary" value="Upload Payment" />
+                                        }
+                                    }
+                                </div>
+
+                            }
+                            else
+                            {
+                                <div id="Change">
+                                    <div class="col-md-6">
+
+                                        @using (Ajax.BeginForm("FindAMatch", new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.Replace, UpdateTargetId = "Change", }))
+                                        {
+                                            <input type="submit" class="btn btn-primary glyphicon glyphicon-search" value="Find a Match" />
+                                        }
+
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="button" class="btn btn-default" disabled="disabled" value="Upload Payment" />
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @*Incoming payments history*@
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">Here are the past payments you have received</a>
+                </h3>
+            </div>
+            <div id="collapse4" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    @{List<Payment> IncomingPayments = ViewBag.IncomingPayments;}
+                    @Html.Partial("_PaymentList", IncomingPayments)
+                </div>
+            </div>
+        </div>
+
+        @*Outgoing payments history*@
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#accordion" href="#collapse5">Here are the past payments you have made</a>
+                </h3>
+            </div>
+            <div id="collapse5" class="panel-collapse collapse in">
+                <div class="panel-body">
+                    @{ List<Payment> OutgoingPayments = ViewBag.OutgoingPayments;}
+                    @Html.Partial("_PaymentList", OutgoingPayments)
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
+    }
+    else
+    {
+@Html.Action("Login", "Account");
+    }
+
+@section scripts{
+    <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script>
+        $(document).ready(function ()
+        {
+            var EditUser = function ()
+            {
+                $("#EditUser").click(function
+                    ()
+                {
+                    $("#firstname").replaceWith(@Html.Editor("First Name"));
+                })
+            }
+        })
+    </script>
+}

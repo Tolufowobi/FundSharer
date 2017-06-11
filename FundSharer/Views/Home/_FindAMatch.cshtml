@@ -1,48 +1,45 @@
 ﻿@using FundSharer.Models
+@model DonationDetails
 @{
-    if (ViewBag.Donation != null)
-    {
-        Donation donation = ViewBag.Donation;
-        <div>
-            @*Recipient account details*@
-            <h1>Here's your match</h1>
-            <div class="list-group">
-                <div class="col-md-6">
-                    <dl class="dl-horizontal">
-                        <dt>@Html.DisplayNameFor(Model => donation.Ticket.TicketHolder.AccountTitle)</dt>
-                        <dd>@Html.DisplayFor(Model => donation.Ticket.TicketHolder.AccountTitle)</dd>
+    @*Recipient account details*@
+            
+            <dl class="dl-horizontal">
+                <dt>@Html.DisplayNameFor(Model => Model.RecipientFullName)</dt>
+                <dd>@Html.DisplayFor(Model => Model.RecipientFullName)</dd>
 
-                        <dt>@Html.DisplayNameFor(Model => donation.Ticket.TicketHolder.AccountNumber)</dt>
-                        <dd>@Html.DisplayFor(Model => donation.Ticket.TicketHolder.AccountNumber)</dd>
+                <dt>@Html.DisplayNameFor(Model => Model.RecipientAccountNumber)</dt>
+                <dd>@Html.DisplayFor(Model => Model.RecipientAccountNumber)</dd>
 
-                        <dt>@Html.DisplayNameFor(Model => donation.Ticket.TicketHolder.Bank)</dt>
-                        <dd>@Html.DisplayFor(Model => donation.Ticket.TicketHolder.Bank)</dd>
+                <dt>@Html.DisplayNameFor(Model => Model.RecipientBankName)</dt>
+                <dd>@Html.DisplayFor(Model => Model.RecipientBankName)</dd>
+                </dl>
+                if (Model.PaymentId != "")
+                {
+                    <dl>
+                    <dt>@Html.DisplayNameFor(Model => Model.PaymentDate)</dt>
+                    <dd>@Html.DisplayFor(Model => Model.PaymentDate)</dd>
 
-                        <dt>@Html.DisplayNameFor(Model => donation.CreationDate):</dt>
-                        <dd>@Html.DisplayFor(Model => donation.CreationDate)</dd>
-
-                        <dt>@Html.Label("Payment Deadline:")</dt>
-                        <dd>@(donation.CreationDate.AddDays(1).ToShortDateString())</dd>
-                    </dl>
-                </div>
-            </div>
-                <div class="col-md-6">
-                    @using (Html.BeginForm("UploadPaymentInfo", "Payments", new { donation.Id }, FormMethod.Get))
+                    <dt>@Html.DisplayNameFor(Model => Model.PaymentStatus)</dt>
+                    @{String status = "Confirmed";}   
+                    @if (Model.PaymentStatus == false)
                     {
-                    <input type="submit" class="btn btn-primary" value="Upload Payment" />
+                         status = "Awaiting Confirmation";
                     }
-                </div>
-            </div>
-
-        
-    }
+                    <dd>@Html.DisplayFor(Model => status)</dd>
+                    </dl>
+                }
+                else
+                {
+                 <div>
+                     @using (Html.BeginForm("UploadPaymentInfo", "Payments", new { Model.DonationId}, FormMethod.Get))
+                     {
+                        
+                        <input type="submit" class="btn btn-primary btn-lg" value="Upload Payment Proof"/>
+                     }
+                </div>  
+                }
 }
-    else
-    {
-        <div></div>
-    }
 
-}
 
 
 

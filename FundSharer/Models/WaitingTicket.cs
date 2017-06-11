@@ -18,6 +18,8 @@ namespace FundSharer.Models
         [ForeignKey("TicketHolderId")]
         public virtual BankAccount TicketHolder { get; set; }
 
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime EntryDate { get; set; }
 
         public virtual ICollection<Donation> Donations

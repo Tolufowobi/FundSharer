@@ -1,0 +1,46 @@
+﻿@using FundSharer.Models
+@model PaymentDetails
+
+@{
+    ViewBag.Title = "Payment Information Upload";
+}
+
+<h2>Upload a proof of payment that matches the following information:</h2>
+
+<div class="row">
+    <div class="col-md-6 text-info">
+        <div class="jumbotron">
+            <div class="container">
+                <div class="form-group">
+                    <dl>
+                        <dt>@Html.DisplayNameFor(model => Model.DonorFullName)</dt>
+                        <dd>@Html.DisplayFor(model => Model.DonorFullName)</dd>
+                    </dl>
+                </div>
+                <div class="form-group">
+                    <dl>
+                        <dt>@Html.DisplayNameFor(model => Model.RecipientFullName)</dt>
+                        <dd>@Html.DisplayFor(model => Model.RecipientFullName)</dd>
+
+                        <dd>@Html.DisplayFor(model => Model.RecipientBankName)</dd>
+                        <dd>@Html.DisplayFor(model => Model.RecipientAccountNumber)</dd>
+                    </dl>
+                </div>
+                <div class="form-group">
+                    <dl>
+                        <dt>@Html.DisplayNameFor(model => Model.Amount)</dt>
+                        <dd>@Html.Display(String.Format("{0}:C", Model.Amount))</dd>
+                    </dl>
+                </div>
+                <div class="form-group">
+                    @using (Html.BeginForm("UploadPaymentInfo", "payments", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        <input type="file" name="image" required />
+                        <p />
+                        <input type="submit" value="Upload" class="btn-primary glyphicon-upload" />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
