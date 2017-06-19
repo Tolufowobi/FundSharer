@@ -5,6 +5,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Data.Entity.Validation;
 using System.ComponentModel.DataAnnotations;
+using System;
 
 namespace FundSharer.Models
 {
@@ -33,6 +34,12 @@ namespace FundSharer.Models
                 return string.Format("{0} {1}", FirstName, LastName);
             }
         }
+
+        public bool ? IsLocked { get; set; }
+
+        [DataType(DataType.Date)]
+        [Display(Name = "Last Login Date")]
+        public DateTime LastLoginDate {get; set;}
     }
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>

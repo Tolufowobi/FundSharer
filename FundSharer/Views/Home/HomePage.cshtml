@@ -238,12 +238,20 @@
                                  }
                                  else
                                  {
-                                    <div id="Change">
-                                        @using (Ajax.BeginForm("FindAMatch", new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.ReplaceWith, UpdateTargetId = "Change", }))
-                                        {
-                                            <input type="submit" class="btn btn-primary btn-lg btn-block" value="Find a Match" />
-                                        }
-                                    </div>
+                                     if (ViewBag.AccountStatus == false)
+                                     {
+                                        <div id="Change">
+                                            @using (Ajax.BeginForm("FindAMatch", new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.ReplaceWith, UpdateTargetId = "Change", }))
+                                            {
+                                                <input type="submit" class="btn btn-primary btn-lg btn-block" value="Find a Match" />
+                                            }
+                                        </div>
+                                     }
+                                     else
+                                     {
+                                         <button type="button" class="btn btn-lg btn-block" disabled>Waiting for donations</button>
+                                     }
+
                                  }
                             }
                         </div>

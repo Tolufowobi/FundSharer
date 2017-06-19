@@ -10,6 +10,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using FundSharer.Models;
 using FundSharer.DataServices;
+using System.Collections.Generic;
+using System.Web.Security;
 
 namespace FundSharer.Controllers
 {
@@ -80,7 +82,8 @@ namespace FundSharer.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    
+                        return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -165,7 +168,15 @@ namespace FundSharer.Controllers
                 {
                    
                     // Create user claims - the user's first name.
-                    UserManager.AddClaim(user.Id, new Claim(ClaimTypes.GivenName, user.FirstName));
+                    if (user.FirstName != "Admin")
+                    {
+                        UserManager.AddClaim(user.Id, new Claim(ClaimTypes.GivenName, user.FirstName));
+                    }
+                    else
+                    {
+                        UserManager.AddToRole(user.Id, "Administrator");
+                    }
+                    
                     using (var db = new ApplicationDbContext())
                     {
                         //create user's bank account.
@@ -182,11 +193,10 @@ namespace FundSharer.Controllers
                         db.BankAccounts.Add(NewbankAccount);
                         db.SaveChanges();
                         //Check to see if this is the first account in the record
-                        //int AccountCount = BankAccountServices.GetBankAccounts().Count(); **
-                        int AccountCount = db.BankAccounts.Count();
+                        int noAvailableTickets = (from t in db.WaitingList where (t.Donations.Count() < 2) select t).Count();
                         // if this is the first account, then create a ticket for it
                         // so it is available for matching
-                        if (AccountCount == 1)
+                        if (noAvailableTickets == 0)
                         {
                             NewbankAccount.IsReciever = true;
                             //Create its ticket
@@ -197,6 +207,7 @@ namespace FundSharer.Controllers
                             };
                             db.WaitingList.Add(Ticket);
                             db.Entry(NewbankAccount).State = System.Data.Entity.EntityState.Modified;
+                            db.SaveChanges();
                             //TicketServices.AddTicket(Ticket);  **
                             //BankAccountServices.UpdateBankAccount(NewbankAccount);  **
                         }
@@ -211,7 +222,7 @@ namespace FundSharer.Controllers
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                     // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction("HomePage", "Home");
+                    return RedirectToLocal(null);
                 }
                 AddErrors(result);
             }
@@ -458,6 +469,69 @@ namespace FundSharer.Controllers
             return View();
         }
 
+        [Authorize(Roles="Administrator")]
+        public PartialViewResult Users()
+        {
+            List<ApplicationUser> Users = new List<ApplicationUser>();
+            using(var db = new ApplicationDbContext())
+            {
+                Users = (from u in db.Users select u).ToList();
+            }
+            return PartialView(Users);
+        }
+
+
+        [Authorize(Roles="Admin")]
+        public ActionResult UserDetails(String Id)
+        {
+            var User = new ApplicationUser();
+            if(Id != "")
+            {
+                using (var db = new ApplicationDbContext())
+                {
+                    User = db.Users.Find(Id);
+                }
+            }
+            return View(User);
+        }
+
+        [Authorize(Roles="Admin")]
+        public ActionResult DeleteUser(String Id)
+        {
+            ApplicationUser User = null;
+            if(Id != "")
+            {
+                using (var db = new ApplicationDbContext())
+                {
+                    User = db.Users.Find(Id);
+                    if (User != null)
+                    {
+                        db.Users.Remove(User);
+                        db.SaveChanges();
+                    }
+                }
+            }
+            return RedirectToAction("Main", "DashBoard");
+        }
+
+        public ActionResult LockUser(String Id)
+        {
+            ApplicationUser User = null;
+            if(Id !="")
+            {
+                using (var db = new ApplicationDbContext())
+                {
+                    User = db.Users.Find(Id);
+                    if(User != null)
+                    {
+                        User.IsLocked = true;
+                        db.SaveChanges();
+                    }
+                }
+            }
+            return RedirectToAction("Users", "DashBoard");
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -504,11 +578,8 @@ namespace FundSharer.Controllers
             {
                 return Redirect(returnUrl);
             }
-            if (User.IsInRole("Admin"))
-            {
-                return RedirectToAction("Main", "DashBoard");
-            }
-            return RedirectToAction("HomePage", "Home");
+     
+            return RedirectToAction("Welcome", "Home");
         }
 
         internal class ChallengeResult : HttpUnauthorizedResult

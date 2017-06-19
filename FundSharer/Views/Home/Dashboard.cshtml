@@ -1,0 +1,83 @@
+﻿
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<div id="wrapper">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title huge"><i class="fa fa-dashboard"></i>Dashboard</div>
+        </div>
+        <div class="panel-body">
+            <nav>
+                <ul class="nav nav-pills flex-column nav-justified" role="tablist">
+                    <li class="nav-item"><a id ="UsersLink" class="nav-link" href="#Users" data-toggle="pill" role="tab"><i class="fa fa-users"></i>Users</a></li>
+                    <li class="nav-item"><a id ="AccountsLink" class="nav-link" href="#Accounts" data-toggle="pill" role="tab"><i class="fa fa-bank"></i>Accounts</a></li>
+                    <li class="nav-item"><a id = "DonationsLink" class="nav-link" href="#Donations" data-toggle="pill" role="tab"><i class="fa fa-sitemap"></i>Donations</a></li>
+                    <li class="nav-item"><a id = "PaymentsLink" class="nav-link" href="#Payments" data-toggle="pill" role="tab"><i class="fa fa-money"></i>Payments</a></li>
+                    <li class="nav-item"><a id ="AdminAccountsLink" class="nav-link" href="#AdminAccounts" data-toggle="pill" role="tab"><i class="fa fa-bank"></i>Admin Accounts</a></li>
+                </ul>
+            </nav>
+            <div class="tab-content">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <div class="panel-title text-info" id="PanelTitle">Users</div>
+                            </div>
+                            <div class="panel-body">
+                                <div class="tab-pane fade" id="Users" role="tabpanel">
+                                   
+                                </div>
+                                <div class="tab-pane fade" id="Accounts" role="tabpanel">
+                                  
+                                </div>
+                                <div class="tab-pane fade" id="Donations" role="tabpanel">
+                                   
+                                </div>
+                                <div class="tab-pane fade" id="Payments" role="tabpanel">
+                                    
+                                </div>
+                                <div class="tab-pane fade" id="AdminAccounts" role="tabpanel">
+                                    
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+   
+@section scripts
+{
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" language="javascript">
+        $('#UsersLink').click(function () {
+            $("#PanelTitle").text("Users");
+            $('#Users').load("/Account/UserAccounts.htm");
+        });
+        $("#AccountsLink").click(function () {
+            $("#PanelTitle").text("Accounts");
+           // $('Accounts').load("Accounts/Accounts.htm");
+        });
+        $("#DonationsLink").click(function () {
+            $("#PanelTitle").text("Donations");
+           // $('Donations').load("Donations/Donations.htm");
+        });
+        $('#PaymentsLink').click(function () {
+            $('#PanelTitle').text("Payments");
+           // $('Payments').load("Payment/Payments.htm");
+        });
+        $('#AdminAccountsLink').click(function () {
+            $('#PanelTitle').text("Admin Accounts");
+            //$('AdminAccounts').load("Accounts/AdminAccounts.htm");
+        });
+    </script>
+    
+    }
+
+
+   
+

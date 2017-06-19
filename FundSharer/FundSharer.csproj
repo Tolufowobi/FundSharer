@@ -238,6 +238,14 @@
     <Compile Include="Migrations\201705280742523_ForeignKeyDefinitions.Designer.cs">
       <DependentUpon>201705280742523_ForeignKeyDefinitions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706111509283_ModifiedUserModel.cs" />
+    <Compile Include="Migrations\201706111509283_ModifiedUserModel.Designer.cs">
+      <DependentUpon>201706111509283_ModifiedUserModel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706181827394_UpdateIdentityModel.cs" />
+    <Compile Include="Migrations\201706181827394_UpdateIdentityModel.Designer.cs">
+      <DependentUpon>201706181827394_UpdateIdentityModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AdminAccount.cs" />
@@ -363,10 +371,11 @@
     <Content Include="Views\Shared\_PaymentList.cshtml" />
     <Content Include="Views\Shared\_RegisterLink.cshtml" />
     <Content Include="Views\Payments\UploadPaymentInfo.cshtml" />
+    <Content Include="Views\Home\Dashboard.cshtml" />
+    <Content Include="Views\Account\Users.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\User\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -398,6 +407,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201705280742523_ForeignKeyDefinitions.resx">
       <DependentUpon>201705280742523_ForeignKeyDefinitions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706111509283_ModifiedUserModel.resx">
+      <DependentUpon>201706111509283_ModifiedUserModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706181827394_UpdateIdentityModel.resx">
+      <DependentUpon>201706181827394_UpdateIdentityModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

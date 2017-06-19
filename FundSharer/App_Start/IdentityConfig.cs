@@ -86,6 +86,7 @@ namespace FundSharer
             }
             return manager;
         }
+        
     }
 
     // Configure the application sign-in manager which is used in this application.
@@ -101,9 +102,47 @@ namespace FundSharer
             return user.GenerateUserIdentityAsync((ApplicationUserManager)UserManager);
         }
 
+        public override Task<SignInStatus> PasswordSignInAsync(string userName, string password, bool rememberMe, bool shouldLockout)
+        {
+            var user = UserManager.FindByEmailAsync(userName).Result;
+            if (user.IsLocked.Value)
+            {
+                return Task.FromResult<SignInStatus>(SignInStatus.LockedOut);
+            }
+            var result = base.PasswordSignInAsync(userName, password, rememberMe, shouldLockout);
+            if (result.Result == SignInStatus.Success)
+            {
+                UpdateUserLoginDate(user);
+            }
+            return result;
+        }
+
+        public override Task SignInAsync(ApplicationUser user, bool isPersistent, bool rememberBrowser)
+        {
+            var result = base.SignInAsync(user, isPersistent, rememberBrowser);
+            if (result.IsFaulted != false)
+            {
+                UpdateUserLoginDate(user);
+            }
+            return result;
+        }
+
         public static ApplicationSignInManager Create(IdentityFactoryOptions<ApplicationSignInManager> options, IOwinContext context)
         {
             return new ApplicationSignInManager(context.GetUserManager<ApplicationUserManager>(), context.Authentication);
+        }
+
+        private void UpdateUserLoginDate(ApplicationUser User)
+        {
+            if(User != null)
+            {
+                using (var db = new ApplicationDbContext())
+                {
+                    var u = db.Users.Find(User.Id);
+                    u.LastLoginDate = DateTime.Now;
+                    db.SaveChanges();
+                }
+            }
         }
     }
 }
