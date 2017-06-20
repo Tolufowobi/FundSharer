@@ -1,0 +1,75 @@
+﻿@using FundSharer.Models
+@model IEnumerable<DonationDetails>
+
+<div id="dataTables-Donations" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="dataTables_length" id="dataTables_Donationlength">
+                <label>
+                    Show &nbsp;
+                    <select name="dataTables_length" class="form-control input-sm">
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    &nbsp; entries
+                </label>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="dataTables_filter" id="dataTables_Donationfilter">
+                <label>
+                    Search: &nbsp;
+                    <input type="search" class="form-control input-sm" />
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <table width="100" class="table table-striped table-bordered table-hover dataTable no-footer dtr-inline" id="dataTable-Donations" role="grid">
+                <thead>
+                    <tr role="row">
+                        <th class="sorting_asc" tabindex="0" rowspan="1" colspan="1">
+                            @Html.DisplayNameFor(model => model.DonorFullName)
+                        </th>
+                        <th class="sorting" tabindex="0" rowspan="1" colspan="1">
+                            @Html.DisplayNameFor(model => model.RecipientFullName)
+                        </th>
+                        <th class="sorting" tabindex="0" rowspan="1" colspan="1">
+                            @Html.DisplayNameFor(model => model.DonationSetupDate)
+                        </th>
+                        <th class="sorting" tabindex="0" rowspan="1" colspan="1">
+                            @Html.DisplayNameFor(model => model.Status)
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (DonationDetails d in Model)
+                    {
+                        <tr role="row">
+                            <td>@Html.DisplayFor(m => d.DonorFullName)</td>
+                            <td>@Html.DisplayFor(m => d.RecipientFullName)</td>
+                            <td>@Html.DisplayFor(m => d.DonationSetupDate)</td>
+                            <td>@Html.DisplayFor(m => d.Status)</td>
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="dataTables_info" id="dataTables-Donations_info" role="status">
+
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="dataTables_paginate paging_simple_numbers" id="dataTables-Donations_paginate">
+            </div>
+        </div>
+    </div>
+</div>
+

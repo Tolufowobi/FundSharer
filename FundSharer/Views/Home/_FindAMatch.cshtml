@@ -2,7 +2,7 @@
 @model DonationDetails
 @{
     @*Recipient account details*@
-            
+
             <dl class="dl-horizontal">
                 <dt>@Html.DisplayNameFor(Model => Model.RecipientFullName)</dt>
                 <dd>@Html.DisplayFor(Model => Model.RecipientFullName)</dd>
@@ -13,19 +13,20 @@
                 <dt>@Html.DisplayNameFor(Model => Model.RecipientBankName)</dt>
                 <dd>@Html.DisplayFor(Model => Model.RecipientBankName)</dd>
                 </dl>
-                if (Model.PaymentId != "")
+                PaymentDetails payDetails = ViewBag.PayDetails; 
+                if (payDetails != null)
                 {
                     <dl>
-                    <dt>@Html.DisplayNameFor(Model => Model.PaymentDate)</dt>
-                    <dd>@Html.DisplayFor(Model => Model.PaymentDate)</dd>
+                    <dt>@Html.DisplayNameFor(Model => payDetails.Date)</dt>
+                    <dd>@Html.DisplayFor(Model => payDetails.Date)</dd>
 
-                    <dt>@Html.DisplayNameFor(Model => Model.PaymentStatus)</dt>
+                    <dt>@Html.DisplayNameFor(Model => payDetails.Status)</dt>
                     @{String status = "Confirmed";}   
-                    @if (Model.PaymentStatus == false)
+                    @if (payDetails.Status == false)
                     {
                          status = "Awaiting Confirmation";
                     }
-                    <dd>@Html.DisplayFor(Model => status)</dd>
+                    <dd>@Html.DisplayFor(model => status)</dd>
                     </dl>
                 }
                 else

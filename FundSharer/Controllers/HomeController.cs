@@ -38,6 +38,10 @@ namespace FundSharer.Controllers
         [Authorize(Roles = "Administrator")]
         private ActionResult Dashboard()
         {
+            using (var bd = new ApplicationDbContext())
+            {
+                
+            }
                 return View("Dashboard");
         }
 
@@ -200,13 +204,15 @@ namespace FundSharer.Controllers
                 DonationDetails.RecipientAccountNumber = PendingOutgoingDonation.Ticket.TicketHolder.AccountNumber;
                 DonationDetails.DonationSetupDate = PendingOutgoingDonation.CreationDate;
             }
+            ViewBag.PendingOutgoingDonation = DonationDetails;
+            PaymentDetails PayDetails = new PaymentDetails();
             if (PendingOutgoingPayment != null)
             {
-                DonationDetails.PaymentId = PendingOutgoingPayment.Id;
-                DonationDetails.PaymentStatus = PendingOutgoingPayment.Confirmed;
-                DonationDetails.PaymentDate = PendingOutgoingPayment.CreationDate;
+                PayDetails.PaymentId = PendingOutgoingPayment.Id;
+                PayDetails.Status = PendingOutgoingPayment.Confirmed;
+                PayDetails.Date = PendingOutgoingPayment.CreationDate.ToShortDateString();
             }
-            ViewBag.PendingOutgoingDonation = DonationDetails;
+            ViewBag.PendingPayDetails = PayDetails;
 
             //Pending Outgoing Payment Information
             ViewBag.PendingOutgoingPayment = PendingOutgoingPayment;

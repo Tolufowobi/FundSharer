@@ -127,6 +127,28 @@ namespace FundSharer.Controllers
                 return RedirectToAction("Index");
             }
 
+            [Authorize(Roles="Administrator")]
+            public PartialViewResult Donations()
+            {
+                List<DonationDetails> Donations = new List<DonationDetails>();
+                using(var db = new ApplicationDbContext())
+                {
+                    var DonationList = (from d in db.Donations select d).ToList();
+                    foreach (Donation dn in DonationList)
+                    {
+                        var dets = new DonationDetails
+                        {
+                            DonationId = dn.Id,
+                            DonorFullName = dn.Donor.AccountTitle,
+                            RecipientFullName = dn.Ticket.TicketHolder.AccountTitle,
+                            DonationSetupDate = dn.CreationDate,
+                            Status = dn.IsOpen
+                        };
+                        Donations.Add(dets);
+                    }
+                }
+                return PartialView("_Donations", Donations);
+            }
 
             protected override void Dispose(bool disposing)
             {

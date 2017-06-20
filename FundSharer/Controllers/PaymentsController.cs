@@ -8,6 +8,7 @@ using FundSharer.Models;
 using Microsoft.AspNet.Identity;
 using System.Web;
 using FundSharer.DataServices;
+using System.Collections.Generic;
 
 namespace FundShare.Controllers
 {
@@ -188,7 +189,7 @@ namespace FundShare.Controllers
             Payment pay = PaymentServices.GetPaymentById(Id);
 
             POPImage img = PopImageServices.GetPaymentPopImage(pay);
-            ConfirmPaymentViewModel details = new ConfirmPaymentViewModel
+            PaymentDetails details = new PaymentDetails
             {
                 PaymentId = pay.Id,
                 Amount = pay.Amount,
@@ -236,6 +237,24 @@ namespace FundShare.Controllers
 
             }
             return HttpNotFound("Record could not be found");
+        }
+
+        [Authorize(Roles="Administrator")]
+        public PartialViewResult Payments()
+        {
+            List<PaymentDetails> Payments = new List<PaymentDetails>();
+            using (var db = new ApplicationDbContext())
+            {
+                (from p in db.Payments select p).ToList().ForEach( py => Payments.Add(new PaymentDetails
+                { PaymentId = py.Id,
+                DonorName = py.DonationPack.Donor.AccountTitle,
+                RecipientName = py.DonationPack.Ticket.TicketHolder.AccountTitle,
+                Amount = py.Amount,
+                Status = py.Confirmed,
+                Date = py.CreationDate.ToShortDateString(), POPimage = (from i in db.POPImages where i.PaymentId == py.Id select i).FirstOrDefault().Image}));
+            }
+
+                return PartialView("_Payments", Payments);
         }
 
         protected override void Dispose(bool disposing)

@@ -12,5 +12,6 @@ namespace FundSharer.Models
 
         [Key, Required]
         public string Id { get; set; }
+           
     }
 }

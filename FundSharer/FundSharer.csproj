@@ -197,6 +197,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BankAccountsController.cs" />
     <Compile Include="Controllers\DonationsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
@@ -251,7 +252,6 @@
     <Compile Include="Models\AdminAccount.cs" />
     <Compile Include="Models\BankAccount.cs" />
     <Compile Include="Models\BaseEntity.cs" />
-    <Compile Include="Models\ConfirmPaymentViewModel.cs" />
     <Compile Include="Models\Donation.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -372,7 +372,10 @@
     <Content Include="Views\Shared\_RegisterLink.cshtml" />
     <Content Include="Views\Payments\UploadPaymentInfo.cshtml" />
     <Content Include="Views\Home\Dashboard.cshtml" />
-    <Content Include="Views\Account\Users.cshtml" />
+    <Content Include="Views\Account\_Users.cshtml" />
+    <Content Include="Views\BankAccounts\_BankAccounts.cshtml" />
+    <Content Include="Views\Donations\_Donations.cshtml" />
+    <Content Include="Views\Payments\_Payments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

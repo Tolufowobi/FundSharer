@@ -472,16 +472,17 @@ namespace FundSharer.Controllers
         [Authorize(Roles="Administrator")]
         public PartialViewResult Users()
         {
-            List<ApplicationUser> Users = new List<ApplicationUser>();
+            List<UserDetails> Users = new List<UserDetails>();
             using(var db = new ApplicationDbContext())
             {
-                Users = (from u in db.Users select u).ToList();
+            (from u in db.Users select u).ToList().ForEach(m => Users.Add(new UserDetails {Id = m.Id, FirstName= m.FirstName, LastName = m.LastName, UserName= m.UserName, PhoneNumber= m.PhoneNumber, LastLoginDate = m.LastLoginDate}));
+               
             }
-            return PartialView(Users);
+            return PartialView("_Users", Users);
         }
 
 
-        [Authorize(Roles="Admin")]
+        [Authorize(Roles="Administrator")]
         public ActionResult UserDetails(String Id)
         {
             var User = new ApplicationUser();
@@ -555,7 +556,7 @@ namespace FundSharer.Controllers
         #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
-
+ 
         private IAuthenticationManager AuthenticationManager
         {
             get

@@ -8,7 +8,7 @@ namespace FundSharer.Models
     {
         public BankAccount() : base()
         { }
-
+        
         [Required]
         [Display(Name = "Account Title")]
         public string AccountTitle { get; set; }

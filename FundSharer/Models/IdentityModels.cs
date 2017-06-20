@@ -37,7 +37,7 @@ namespace FundSharer.Models
 
         public bool ? IsLocked { get; set; }
 
-        [DataType(DataType.Date)]
+        [DataType(DataType.DateTime)]
         [Display(Name = "Last Login Date")]
         public DateTime LastLoginDate {get; set;}
     }
