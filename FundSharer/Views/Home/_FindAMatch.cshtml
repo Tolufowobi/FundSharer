@@ -32,7 +32,7 @@
                 else
                 {
                  <div>
-                     @using (Html.BeginForm("UploadPaymentInfo", "Payments", new { Model.DonationId}, FormMethod.Get))
+                     @using (Html.BeginForm("UploadPaymentInfo", "Payments", new { Id = Model.DonationId}, FormMethod.Get))
                      {
                         
                         <input type="submit" class="btn btn-primary btn-lg" value="Upload Payment Proof"/>

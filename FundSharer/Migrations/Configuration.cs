@@ -36,21 +36,35 @@ namespace FundSharer.Migrations
 
             //WaitingTickets
             context.WaitingList.RemoveRange(context.WaitingList.ToList());
-            
-            
-            
-            //  This method will be called after migrating to the latest version.
 
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data. E.g.
-            //
-            //    context.People.AddOrUpdate(
-            //      p => p.FullName,
-            //      new Person { FullName = "Andrew Peters" },
-            //      new Person { FullName = "Brice Lambson" },
-            //      new Person { FullName = "Rowan Miller" }
-            //    );
-            //
+            //Populate database
+            var Users = (from u in context.Users select u).ToList();
+
+            //Create Bank Accounts
+            String[] Banks = {"GTB", "UBA", "Fidelity", "First Bank" };
+            int counter = 0;
+            foreach (ApplicationUser User in Users)
+            {
+                if (User.FirstName != "Admin")
+                {
+                    BankAccount b = new BankAccount
+                    {
+                        AccountTitle = User.FullName,
+                        AccountNumber = "112345",
+                        Bank = Banks[counter],
+                        Owner = User,
+                        OwnerId = User.Id
+                    };
+                    context.BankAccounts.Add(b);
+                    if (counter == 0) // Create the first ticket 
+                    {
+                        var firstticket = new WaitingTicket { EntryDate = DateTime.Now, TicketHolder = b, TicketHolderId = b.Id };
+                        context.WaitingList.Add(firstticket);
+                    }
+                    counter++;
+                }
+                
+            }
         }
     }
 }

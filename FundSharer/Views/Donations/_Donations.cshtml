@@ -52,7 +52,14 @@
                             <td>@Html.DisplayFor(m => d.DonorFullName)</td>
                             <td>@Html.DisplayFor(m => d.RecipientFullName)</td>
                             <td>@Html.DisplayFor(m => d.DonationSetupDate)</td>
-                            <td>@Html.DisplayFor(m => d.Status)</td>
+                            <td>@if(d.Status == true)
+                            {
+                                <div class="alert alert-success">Accepted</div>
+                            }
+                            else
+                            {
+                                <div class="alert alert-danger">Pending</div>
+                            }
                         </tr>
                     }
                 </tbody>

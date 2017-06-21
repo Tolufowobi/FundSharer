@@ -67,8 +67,12 @@ namespace FundSharer.Controllers
                     };
                     db.Donations.Add(NewDonation);
                     db.SaveChanges();
-                    ViewBag.Donation = NewDonation;
-                    return PartialView("_FindAMatch");
+                    DonationDetails DonDetails = new DonationDetails { DonationId = NewDonation.Id,
+                        RecipientFullName = NewDonation.Ticket.TicketHolder.AccountTitle,
+                        RecipientAccountNumber = NewDonation.Ticket.TicketHolder.AccountNumber,
+                        RecipientBankName = NewDonation.Ticket.TicketHolder.Bank,
+                    };
+                    return PartialView("_FindAMatch", DonDetails );
                 }
                 else { return HttpNotFound(); }
             }
