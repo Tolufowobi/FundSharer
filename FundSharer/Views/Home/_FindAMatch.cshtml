@@ -13,7 +13,7 @@
                 <dt>@Html.DisplayNameFor(Model => Model.RecipientBankName)</dt>
                 <dd>@Html.DisplayFor(Model => Model.RecipientBankName)</dd>
                 </dl>
-                PaymentDetails payDetails = ViewBag.PayDetails; 
+                PaymentDetails payDetails = ViewBag.PendingPayDetails; 
                 if (payDetails != null)
                 {
                     <dl>
@@ -34,8 +34,7 @@
                  <div>
                      @using (Html.BeginForm("UploadPaymentInfo", "Payments", new { Id = Model.DonationId}, FormMethod.Get))
                      {
-                        
-                        <input type="submit" class="btn btn-primary btn-lg" value="Upload Payment Proof"/>
+                        <div class="pull-right"><input type="submit" class="btn btn-primary btn-lg" value="Upload Payment Proof"/></div>
                      }
                 </div>  
                 }

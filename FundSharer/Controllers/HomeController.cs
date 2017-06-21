@@ -36,7 +36,7 @@ namespace FundSharer.Controllers
         }
         
         [Authorize(Roles = "Administrator")]
-        private ActionResult Dashboard()
+        internal ActionResult Dashboard()
         {
             using (var bd = new ApplicationDbContext())
             {
@@ -45,42 +45,7 @@ namespace FundSharer.Controllers
                 return View("Dashboard");
         }
 
-        public ActionResult FindAMatch()
-        {
-            var UserId = User.Identity.GetUserId();
-            ApplicationUser AppUser;
-            using (var db = new ApplicationDbContext())
-            {
-                AppUser = db.Users.Find(UserId);
-                BankAccount donor = (from ba in db.BankAccounts where ba.OwnerId == AppUser.Id select ba).FirstOrDefault();
-                WaitingTicket ticket = (from t in db.WaitingList where t.Donations.Count < 2 orderby t.EntryDate select t).FirstOrDefault();
-                if (ticket != null)
-                {
-                    Donation NewDonation = new Donation
-                    {
-                        Donor = donor,
-                        DonorId = donor.Id,
-                        IsOpen = false,
-                        Ticket = ticket,
-                        TicketId = ticket.Id,
-                        CreationDate = DateTime.Now
-                    };
-                    db.Donations.Add(NewDonation);
-                    db.SaveChanges();
-                    DonationDetails DonDetails = new DonationDetails { DonationId = NewDonation.Id,
-                        RecipientFullName = NewDonation.Ticket.TicketHolder.AccountTitle,
-                        RecipientAccountNumber = NewDonation.Ticket.TicketHolder.AccountNumber,
-                        RecipientBankName = NewDonation.Ticket.TicketHolder.Bank,
-                    };
-                    return PartialView("_FindAMatch", DonDetails );
-                }
-                else { return HttpNotFound(); }
-            }
-          
-            
-        }
-
-        private ActionResult Homepage()
+        internal ActionResult Homepage()
         {
             ApplicationUser AppUser;
             // Get data
@@ -123,9 +88,9 @@ namespace FundSharer.Controllers
                     PendingOutgoingDonation = OutgoingDonations.Where(m => m.IsOpen == false).First();
                 }
 
-                if (OutgoingPayments.Where(m => m.Confirmed = false).Count() > 0)
+                if (OutgoingPayments.Where(m => m.Confirmed == false).Count() > 0)
                 {
-                    PendingOutgoingPayment = OutgoingPayments.Where(m => m.Confirmed = false).First();
+                    PendingOutgoingPayment = OutgoingPayments.Where(m => m.Confirmed == false).First();
                 }
 
             }
@@ -194,24 +159,32 @@ namespace FundSharer.Controllers
                         set.Add("PaymentId", Payment.Id);
                         set.Add("Confirmed", Payment.Confirmed);
                     }
+                    else
+                    {
+                        set.Add("PaymentId", null);
+                        set.Add("Confirmed", null);
+                    }
                     PendingIncomingDonations.Add(set);
                 }
             }
             ViewBag.PendingIncomingDonations = PendingIncomingDonations;
 
             //Pending Outgoing Donation View
-            DonationDetails DonationDetails = new DonationDetails();
+            DonationDetails DonationDetails = null;
             if (PendingOutgoingDonation != null)
             {
+                DonationDetails = new DonationDetails();
                 DonationDetails.DonationId = PendingOutgoingDonation.Id;
                 DonationDetails.RecipientFullName = PendingOutgoingDonation.Ticket.TicketHolder.AccountTitle;
                 DonationDetails.RecipientAccountNumber = PendingOutgoingDonation.Ticket.TicketHolder.AccountNumber;
+                DonationDetails.RecipientBankName = PendingOutgoingDonation.Ticket.TicketHolder.Bank;
                 DonationDetails.DonationSetupDate = PendingOutgoingDonation.CreationDate;
             }
             ViewBag.PendingOutgoingDonation = DonationDetails;
-            PaymentDetails PayDetails = new PaymentDetails();
+            PaymentDetails PayDetails = null;
             if (PendingOutgoingPayment != null)
             {
+                PayDetails = new PaymentDetails();
                 PayDetails.PaymentId = PendingOutgoingPayment.Id;
                 PayDetails.Status = PendingOutgoingPayment.Confirmed;
                 PayDetails.Date = PendingOutgoingPayment.CreationDate.ToShortDateString();
@@ -223,6 +196,42 @@ namespace FundSharer.Controllers
 
             return View("HomePage");
         }
+
+        public ActionResult FindAMatch()
+        {
+            var UserId = User.Identity.GetUserId();
+            ApplicationUser AppUser;
+            using (var db = new ApplicationDbContext())
+            {
+                AppUser = db.Users.Find(UserId);
+                BankAccount donor = (from ba in db.BankAccounts where ba.OwnerId == AppUser.Id select ba).FirstOrDefault();
+                WaitingTicket ticket = (from t in db.WaitingList where t.Donations.Count < 2 orderby t.EntryDate select t).FirstOrDefault();
+                if (ticket != null)
+                {
+                    Donation NewDonation = new Donation
+                    {
+                        Donor = donor,
+                        DonorId = donor.Id,
+                        IsOpen = false,
+                        Ticket = ticket,
+                        TicketId = ticket.Id,
+                        CreationDate = DateTime.Now
+                    };
+                    db.Donations.Add(NewDonation);
+                    db.SaveChanges();
+                    DonationDetails DonDetails = new DonationDetails { DonationId = NewDonation.Id,
+                        RecipientFullName = NewDonation.Ticket.TicketHolder.AccountTitle,
+                        RecipientAccountNumber = NewDonation.Ticket.TicketHolder.AccountNumber,
+                        RecipientBankName = NewDonation.Ticket.TicketHolder.Bank,
+                    };
+                    return PartialView("_FindAMatch", DonDetails );
+                }
+                else { return HttpNotFound(); }
+            }
+          
+            
+        }
+      
     }
 
 }

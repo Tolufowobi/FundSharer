@@ -89,26 +89,26 @@
                                                 var PaymentId = i["PaymentId"];
                                                 var Confirmed = i["Confirmed"];
                                                  <tr>
-                                                    <td>Name</td>
-                                                    <td>AccountNumber</td>
-                                                    <td>BankName</td>
+                                                    <td>@Name</td>
+                                                    <td>@AccountNumber</td>
+                                                    <td>@BankName</td>
                                                     @if (PaymentId != null)
                                                     {
                                                         if ((bool)Confirmed == true)
                                                         {
-                                                            <td><button class="btn btn-success btn-sm" disabled>Confirmed</button></td>
+                                                            <td><div class="alert alert-success">Confirmed</div></td>
                                                         }
                                                         else
                                                         {
                                                             using (Html.BeginForm("ConfirmPayment", "Payments", new { Id = PaymentId }, FormMethod.Get, new { @class = "form-inline" }))
                                                             {
-                                                                <td><input type="submit" class="btn btn-success btn-sm"/></td>
+                                                                <td><input type="submit" class="btn btn-success btn-sm" value="Confirm Payment"/></td>
                                                             }
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        <td><button class="btn btn-default btn-sm" disabled>Payment Pending</button></td>
+                                                        <td><div class="alert alert-warning">Payment Pending</div></td>
                                                     }
                                                  </tr>
                                             }
@@ -233,8 +233,7 @@
                                  DonationDetails OutgoingDonation = ViewBag.PendingOutgoingDonation;
                                  if (OutgoingDonation != null)
                                  {
-
-                                     Html.Partial("_FindAMatch", OutgoingDonation);
+                                     @Html.Partial("_FindAMatch", OutgoingDonation)
                                  }
                                  else
                                  {
@@ -243,13 +242,13 @@
                                         <div id="Change">
                                             @using (Ajax.BeginForm("FindAMatch", new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.ReplaceWith, UpdateTargetId = "Change", }))
                                             {
-                                                <input type="submit" class="btn btn-primary btn-lg btn-block" value="Find a Match" />
+                                                <div class="pull-right"><input type="submit" class="btn btn-primary btn-lg btn-block" value="Find a Match" /></div>
                                             }
                                         </div>
                                      }
                                      else
                                      {
-                                         <button type="button" class="btn btn-lg btn-block" disabled>Waiting for donations</button>
+                                         <div class="alert alert-info">Waiting for donations</div>
                                      }
 
                                  }

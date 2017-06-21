@@ -199,7 +199,7 @@ namespace FundShare.Controllers
                 POPimage = img.Image
             };
 
-            return View(details);
+            return View("ConfirmPayment", details);
         }
 
         //POST

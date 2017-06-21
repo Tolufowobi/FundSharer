@@ -1,46 +1,57 @@
 ﻿@using FundSharer.Models
-@model PaymentDetails
+@model DonationDetails
 
 @{
     ViewBag.Title = "Payment Information Upload";
 }
 
-<h2>Upload a proof of payment that matches the following information:</h2>
 
 <div class="row">
-    <div class="col-md-6 text-info">
-        <div class="jumbotron">
-            <div class="container">
-                <div class="form-group">
-                    <dl>
-                        <dt>@Html.DisplayNameFor(model => Model.DonorFullName)</dt>
-                        <dd>@Html.DisplayFor(model => Model.DonorFullName)</dd>
-                    </dl>
-                </div>
-                <div class="form-group">
-                    <dl>
-                        <dt>@Html.DisplayNameFor(model => Model.RecipientFullName)</dt>
-                        <dd>@Html.DisplayFor(model => Model.RecipientFullName)</dd>
+    <div class="col-sm-10 col-sm-offset-1">
+        <div  class="panel panel-success">
+            <div class=" panel-heading">
+                <div class="panel-title huge">Pleas upload a proof of payment document</div>
+            </div>
+            <div class="panel-body">
+                <div class="text-info">
+                    <div class="form-group">
+                        <hr/>
+                        <dl>
+                            <dt>@Html.DisplayNameFor(model => Model.DonorFullName)</dt>
+                            <dd>@Html.DisplayFor(model => Model.DonorFullName)</dd>
 
-                        <dd>@Html.DisplayFor(model => Model.RecipientBankName)</dd>
-                        <dd>@Html.DisplayFor(model => Model.RecipientAccountNumber)</dd>
-                    </dl>
-                </div>
-                <div class="form-group">
-                    <dl>
-                        <dt>@Html.DisplayNameFor(model => Model.Amount)</dt>
-                        <dd>@Html.Display(String.Format("{0}:C", Model.Amount))</dd>
-                    </dl>
-                </div>
-                <div class="form-group">
-                    @using (Html.BeginForm("UploadPaymentInfo", "payments", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                    {
-                        <input type="file" name="image" required />
-                        <p />
-                        <input type="submit" value="Upload" class="btn-primary glyphicon-upload" />
-                    }
+                            <dt>@Html.DisplayNameFor(model => Model.DonorAccountNumber)</dt>
+                            <dd>@Html.DisplayFor(model => Model.DonorAccountNumber)</dd>
+
+                            <dt>@Html.DisplayNameFor(model => Model.DonorBankName)</dt>
+                            <dd>@Html.DisplayFor(model => Model.DonorBankName)</dd>
+                        </dl>
+                    </div>
+                    <div class="form-group">
+                        <hr/>
+                        <dl>
+                            <dt>@Html.DisplayNameFor(model => Model.RecipientFullName)</dt>
+                            <dd>@Html.DisplayFor(model => Model.RecipientFullName)</dd>
+
+                            <dt>@Html.DisplayNameFor(model => Model.RecipientAccountNumber)</dt>
+                            <dd>@Html.DisplayFor(model => Model.RecipientAccountNumber)</dd>
+
+                            <dt>@Html.DisplayNameFor(model => Model.RecipientBankName)</dt>
+                            <dd>@Html.DisplayFor(model => Model.RecipientBankName)</dd>
+                        </dl>
+                    </div>
+                    <hr/><hr/>
+                    <div class="form-group">
+                        @using (Html.BeginForm("UploadPaymentInfo", "payments", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            <input type="file" name="image" required />
+                           <hr/>
+                            <i class=" glyphicon glyphicon-upload"></i><input type="submit" value="Upload" class="btn-primary"/>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+        
