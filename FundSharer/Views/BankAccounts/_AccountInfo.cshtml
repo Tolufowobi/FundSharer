@@ -1,0 +1,16 @@
+﻿@{
+    var UserAccountTitle = ViewBag.AccountTitle;
+    var UserAccountNumber = ViewBag.AccountNumber;
+    var UserBankName = ViewBag.BankName;
+}
+<dl class="text-info">
+    <dt>@Html.Label("Account Title")</dt>
+    <dd><div id="aAccountTitle">@Html.DisplayTextFor(m => UserAccountTitle)</div></dd>
+    <dt>@Html.Label("Account Number")</dt>
+    <dd><div id="aAccountNumber">@Html.DisplayTextFor(m => UserAccountNumber)</div></dd>
+    <dt>@Html.Label("Bank Name")</dt>
+    <dd><div id="aBankName">@Html.DisplayTextFor(m => UserBankName)</div></dd>
+</dl>
+<hr />
+<div id="aEditLink"><a href="#" id="aEditLink" onclick="RenderEdit(uEditLink)"><i class="fa fa-edit" />Edit</a></div>
+

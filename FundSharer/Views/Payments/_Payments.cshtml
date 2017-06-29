@@ -1,100 +1,38 @@
 ﻿@using FundSharer.Models
 @model IEnumerable<PaymentDetails>
 
-<div id="dataTables-Payments" class="dataTables_wrapper form-inline dt-bootstrap no-footer">
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="dataTables_length" id="dataTables_Paymentlength">
-                <label>
-                    Show &nbsp;
-                    <select name="dataTables_length" class="form-control input-sm">
-                        <option value="10">10</option>
-                        <option value="25">25</option>
-                        <option value="50">50</option>
-                        <option value="100">100</option>
-                    </select>
-                    &nbsp; entries
-                </label>
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="dataTables_filter" id="dataTables_Paymentfilter">
-                <label>
-                    Search: &nbsp;
-                    <input type="search" class="form-control input-sm" />
-                </label>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <table width="100" class="table table-striped table-bordered table-hover dataTable no-footer dtr-inline" id="dataTable-Payments" role="grid">
-                <thead>
-                    <tr role="row">
-                        <th class="sorting_asc" tabindex="0" rowspan="1" colspan="1">
-                            @Html.DisplayNameFor(model => model.DonorName)
-                        </th>
-                        <th class="sorting" tabindex="0" rowspan="1" colspan="1">
-                            @Html.DisplayNameFor(model => model.RecipientName)
-                        </th>
-                        <th class="sorting" tabindex="0" rowspan="1" colspan="1">
-                            @Html.DisplayNameFor(model => model.Date)
-                        </th>
-                        <th class="sorting" tabindex="0" rowspan="1" colspan="1">
-                            @Html.DisplayNameFor(model => model.Status)
-                        </th>
-                        <th class="sorting" tabindex="0" rowspan="1" colspan="1">
-                            @Html.DisplayNameFor(model => model.POPimage)
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (PaymentDetails p in Model)
+
+
+    @foreach (PaymentDetails p in Model)
+    {
+        <tr>
+            <td>@Html.DisplayFor(m => p.DonorName)</td>
+            <td>@Html.DisplayFor(m => p.RecipientName)</td>
+            <td>@Html.DisplayFor(m => p.Date)</td>
+            <td>
+                @{ if (p.Status == true)
                     {
-                        <tr role="row">
-                            <td>@Html.DisplayFor(m => p.DonorName)</td>
-                            <td>@Html.DisplayFor(m => p.RecipientName)</td>
-                            <td>@Html.DisplayFor(m => p.Date)</td>
-                            <td>
-                                @{ if (p.Status == true)
-                                    {
-                                        <div class="alert alert-success">Confirmed</div>
-                                    }
-                                    else
-                                    {
-                                        <div class="alert alert-danger">Awaiting Confirmation</div>
-                                    }
-                                }
-                            </td>
-                            <td>
-                                @{ if (p.POPimage != null)
-                                    {
-                                        <div class="alert alert-success"><a href=""><i class="fa fa-image"></i></a></div>
-                                    }
-                                    else
-                                    {
-                                        <div class="alert alert-danger"><a href="" class="disabled"><i class="fa fa-image"></i></a></div>
-                                    }
-                                }
-                            </td>
-                        </tr>
+                        <div class="alert alert-success">Confirmed</div>
                     }
-                </tbody>
+                    else
+                    {
+                        <div class="alert alert-danger">Awaiting Confirmation</div>
+                    }
+                }
+            </td>
+            <td>
+                @{ if (p.POPimage != null)
+                    {
+                        <div class="alert alert-success"><a href=""><i class="fa fa-image"></i></a></div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-danger"><a href="" class="disabled"><i class="fa fa-image"></i></a></div>
+                    }
+                }
+            </td>
+        </tr>
+    }
 
-            </table>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="dataTables_info" id="dataTables-Payments_info" role="status">
-
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="dataTables_paginate paging_simple_numbers" id="dataTables-Payments_paginate">
-            </div>
-        </div>
-    </div>
-</div>
 
 

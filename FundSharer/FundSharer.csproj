@@ -363,7 +363,7 @@
     <Content Include="Views\Payments\Details.cshtml" />
     <Content Include="Views\Payments\Edit.cshtml" />
     <Content Include="Views\Payments\Index.cshtml" />
-    <Content Include="Views\Shared\_AccountDetails.cshtml" />
+    <Content Include="Views\Shared\_BankAccountDetails.cshtml" />
     <Content Include="Views\Shared\_DonationDetails.cshtml" />
     <Content Include="Views\Shared\_LoginLink.cshtml" />
     <Content Include="Views\Shared\_LoginRegister.cshtml" />
@@ -376,6 +376,11 @@
     <Content Include="Views\BankAccounts\_BankAccounts.cshtml" />
     <Content Include="Views\Donations\_Donations.cshtml" />
     <Content Include="Views\Payments\_Payments.cshtml" />
+    <Content Include="Views\Account\_PersonalInfo.cshtml" />
+    <Content Include="Views\Account\_Edit.cshtml" />
+    <Content Include="Views\BankAccounts\_AccountInfo.cshtml" />
+    <Content Include="Views\BankAccounts\_Edit.cshtml" />
+    <Content Include="Views\Shared\_UserDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

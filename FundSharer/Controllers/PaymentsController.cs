@@ -187,19 +187,24 @@ namespace FundShare.Controllers
         public ActionResult ConfirmPayment(String Id)
         {
             Payment pay = PaymentServices.GetPaymentById(Id);
-
-            POPImage img = PopImageServices.GetPaymentPopImage(pay);
-            PaymentDetails details = new PaymentDetails
+            if(pay.Confirmed == false)
             {
-                PaymentId = pay.Id,
-                Amount = pay.Amount,
-                DonorName = pay.DonationPack.Donor.Owner.FullName,
-                RecipientAccountNumber = pay.DonationPack.Ticket.TicketHolder.AccountNumber,
-                Date = pay.CreationDate.ToShortDateString(),
-                POPimage = img.Image
-            };
-
-            return View("ConfirmPayment", details);
+                POPImage img = PopImageServices.GetPaymentPopImage(pay);
+                PaymentDetails details = new PaymentDetails
+                {
+                    PaymentId = pay.Id,
+                    Amount = pay.Amount,
+                    DonorName = pay.DonationPack.Donor.Owner.FullName,
+                    RecipientAccountNumber = pay.DonationPack.Ticket.TicketHolder.AccountNumber,
+                    Date = pay.CreationDate.ToShortDateString(),
+                    POPimage = img.Image
+                };
+                return View("ConfirmPayment", details);
+            }
+            else
+            {
+                return RedirectToAction("Welcome", "Home");
+            }
         }
 
         //POST

@@ -231,13 +231,47 @@ namespace FundSharer.Controllers
             return View(model);
         }
 
-        //Post
-      //  [ValidateAntiForgeryToken]
-       // public PartialViewResult Edit(String Id)
-       // {
-            
-      //  }
+        
+        public PartialViewResult Edit()
+        { var uid = User.Identity.GetUserId();
+            var usr = UserManager.FindById(uid);
+            RegisterViewModel mdl = new RegisterViewModel() { FirstName = usr.FirstName, LastName = usr.LastName, Email = usr.Email, ContactNumber = usr.PhoneNumber };
+            return PartialView("_Edit",mdl);
+        }
 
+        public PartialViewResult Edit(RegisterViewModel values)
+        {
+            if (values != null)
+            {
+                var uid = User.Identity.GetUserId();
+                using (var db = new ApplicationDbContext())
+                {
+                    var usr = UserManager.FindById(uid);
+                    usr.FirstName = values.FirstName;
+                    usr.LastName = values.LastName;
+                    usr.Email = values.Email;
+                    usr.PhoneNumber = values.ContactNumber;
+                    var result = UserManager.Update(usr);
+                    if (result == IdentityResult.Success)
+                    {
+                        db.SaveChanges();
+                        ViewBag.FirstName = usr.FirstName;
+                        ViewBag.LastName = usr.LastName;
+                        ViewBag.PhoneNumber = usr.PhoneNumber;
+                        ViewBag.EmailAddress = usr.Email;
+                        return PartialView("_PersonalInfo");
+                    }
+                    else
+                    {
+                        return PartialView("_Edit", values);
+                    }
+                }
+            }
+            else
+            {
+                return PartialView("_Edit", values);
+            }
+        }
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
@@ -482,18 +516,35 @@ namespace FundSharer.Controllers
         }
 
 
-        [Authorize(Roles="Administrator")]
-        public ActionResult UserDetails(String Id)
+        [Authorize()]
+        public ActionResult Details(String Id)
         {
-            var User = new ApplicationUser();
-            if(Id != "")
-            {
+
+            UserDetails ud = null;
                 using (var db = new ApplicationDbContext())
                 {
-                    User = db.Users.Find(Id);
+                    var usr = db.Users.Find(Id);
+                    if(usr != null)
+                    {
+                        ud = new UserDetails()
+                        {
+                            FirstName = usr.FirstName,
+                            LastName = usr.LastName,
+                            PhoneNumber = usr.PhoneNumber,
+                            UserName = usr.UserName,
+                            LastLoginDate = usr.LastLoginDate,
+                            Id = usr.Id,
+                            IsLocked = (bool)usr.IsLocked
+                        };
+                    ud.AccountId = (from a in db.BankAccounts where a.OwnerId == usr.Id select a.Id).FirstOrDefault();
+                        return PartialView("_UserDetails", ud);
+                    }
+                    else
+                    {
+                        return HttpNotFound("Record not found");
+                    }
+
                 }
-            }
-            return View(User);
         }
 
         [Authorize(Roles="Admin")]

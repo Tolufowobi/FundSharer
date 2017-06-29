@@ -1,0 +1,33 @@
+﻿@using FundSharer.Models;
+@model UserDetails
+    <div>
+        <div class="text-info">
+            <dl class="dl-horizontal">
+                <dt>@Html.DisplayNameFor(model => Model.FirstName)</dt>
+                <dd>@Html.DisplayTextFor(model => Model.FirstName)</dd>
+                <dt>@Html.DisplayNameFor(model => Model.LastName)</dt>
+                <dd>@Html.DisplayFor(model => Model.LastName)</dd>
+                <dt>@Html.DisplayNameFor(model => Model.UserName)</dt>
+                <dd>@Html.DisplayFor(model => Model.UserName)</dd>
+                <dt>@Html.DisplayNameFor(model => Model.PhoneNumber)</dt>
+                <dd>@Html.DisplayFor(model => Model.PhoneNumber)</dd>
+                </dl>
+               @if (User.IsInRole("Administrator"))
+               {
+                <dl class="dl-horizontal">
+                <dt>@Html.DisplayNameFor(model => Model.LastLoginDate)</dt>
+                <dd>@Html.DisplayFor(model => Model.LastLoginDate)</dd>
+                <dt>@Html.DisplayNameFor(model => Model.IsLocked)</dt>
+                <dd>@Html.DisplayFor(model => Model.IsLocked)</dd>
+                </dl>
+                @Html.ActionLink("View Account Details", "Details", "Account", new {Id= Model.AccountId})
+                @Html.ActionLink("Back to list", "Users", "Account")
+               }
+               else
+               {
+                <div id="uEditLink"><a href="#" id="aEditLink" onclick="RenderEdit(uEditLink)"><i class="fa fa-edit" />Edit</a></div>
+               }
+        </div>
+    </div>
+
+                    

@@ -1,0 +1,36 @@
+﻿@model FundSharer.Models.BankAccountDetails
+
+    <div>
+        <hr />
+        <div class=" = text-info">
+            <dl class="dl-horizontal">
+                <dt>@Html.DisplayNameFor(model => Model.AccountTitle)</dt>
+                <dd>@Html.DisplayTextFor(model => Model.AccountTitle)</dd>
+                <dt>@Html.DisplayNameFor(model => Model.AccountNumber)</dt>
+                <dd>@Html.DisplayFor(model => Model.AccountNumber)</dd>
+                <dt>@Html.DisplayNameFor(model => Model.BankName)</dt>
+                <dd>@Html.DisplayFor(model => Model.BankName)</dd>
+            </dl>
+            @if(User.IsInRole("Administrator"))
+            {
+                <dl>
+                    <dt>@Html.DisplayNameFor(model => Model.IncomingPaymentsCount)</dt>
+                    <dd>@Html.DisplayTextFor(model => Model.IncomingPaymentsCount)</dd>
+                    <dt>@Html.DisplayNameFor(model => Model.LastIncomingDonationDate)</dt>
+                    <dd>@Html.DisplayTextFor(model => Model.LastIncomingDonationDate)</dd>
+                    <dt>@Html.DisplayNameFor(model => Model.OutgoingPaymentsCount)</dt>
+                    <dd>@Html.DisplayTextFor(model => Model.OutgoingPaymentsCount)</dd>
+                    <dt>@Html.DisplayNameFor(model => Model.LastOutgoingDonationDate)</dt>
+                    <dd>@Html.DisplayTextFor(model => Model.LastOutgoingDonationDate)</dd>
+                </dl>
+                <div class="row">
+                    @Html.ActionLink("Personal Details", "Details", "Account", new { Id= Model.OwnerId})
+                    @Html.ActionLink("View Donations", "Donations", "Donations", new { Id = Model.Id})
+                </div>
+            }
+            else
+            {
+                <div id="aEditLink"><a href="#" id="aEditLink" onclick="RenderEdit(aEditLink)"><i class="fa fa-edit" />Edit</a></div>
+            }
+        </div>
+    </div>

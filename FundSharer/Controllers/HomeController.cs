@@ -1,4 +1,4 @@
-﻿using FundSharer.DataServices;
+﻿ using FundSharer.DataServices;
 using FundSharer.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
@@ -121,16 +121,25 @@ namespace FundSharer.Controllers
             //Add objects to the data dictionary
 
             //Personal Information
-            ViewBag.FirstName = FirstName;
-            ViewBag.LastName = LastName;
-            ViewBag.PhoneNumber = PhoneNumber;
-            ViewBag.EmailAddress = Emailaddress;
+            UserDetails Ud = new UserDetails
+            {
+                FirstName = FirstName,
+                LastName = LastName,
+                PhoneNumber = PhoneNumber,
+                UserName = Emailaddress
+            };
+            ViewBag.UserDetails = Ud;
 
             //Account Information
-            ViewBag.AccountTitle = UserBankAccount.AccountTitle;
-            ViewBag.AccountNumber = UserBankAccount.AccountNumber;
-            ViewBag.BankName = UserBankAccount.Bank;
-            ViewBag.AccountStatus = UserBankAccount.IsReciever;
+            BankAccountDetails Bd = new BankAccountDetails
+            {
+                AccountTitle = UserBankAccount.AccountTitle,
+                AccountNumber = UserBankAccount.AccountTitle,
+                BankName = UserBankAccount.Bank,
+                IsReceiver = UserBankAccount.IsReciever
+            };
+            ViewBag.BankAccounDetails = Bd;
+
             //Outgoing Payments Information
             ViewBag.OutgoingPayments = OutgoingPayments.Where(m => m.Confirmed == true).Select(m => m.CreationDate).ToList();
 

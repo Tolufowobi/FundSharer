@@ -24,17 +24,62 @@
                             </div>
                             <div class="panel-body">
                                 <div class="tab-content">
-                                    <div class="tab-pane fade" id="Users" role="tabpanel">
-                                        
+                                    <div class="tab-pane fade active in" id="Users" role="tabpanel">
+                                        <table id="dataTable-Users">
+                                            <thead>
+                                                <tr>
+                                                    <th>First Name</th>
+                                                    <th>Last Name</th>
+                                                    <th>User Name</th>
+                                                    <th>Phone Number </th>
+                                                    <th>Login TimeStamp </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="UsersBody"></tbody>
+                                        </table>
                                     </div>
                                     <div class="tab-pane fade" id="Accounts" role="tabpanel">
-                                        
+                                        <table id="dataTable-BankAccount">
+                                            <thead>
+                                                <tr>
+                                                    <th>Account Name</th>
+                                                    <th>Account Number</th>
+                                                    <th>Bank Name</th>
+                                                    <th># Incoming Payments</th>
+                                                    <th>Last Payment Received</th>
+                                                    <th># Outgoing Payments</th>
+                                                    <th>Last Payment Sent</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="AccountsBody"></tbody>
+                                        </table>
                                     </div>
                                     <div class="tab-pane fade" id="Donations" role="tabpanel">
-                                        
+                                        <table id="dataTable-Donations">
+                                            <thead>
+                                                <tr role="row">
+                                                    <th>Donor</th>
+                                                    <th>Recipeient</th>
+                                                    <th>Match Date</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="DonationsBody"></tbody>
+                                        </table>
                                     </div>
                                     <div class="tab-pane fade" id="Payments" role="tabpanel">
-                                        
+                                        <table id="dataTable-Payments">
+                                            <thead>
+                                                <tr>
+                                                    <th>Donor</th>
+                                                    <th>Recipient</th>
+                                                    <th>Submission Date</th>
+                                                    <th>Status</th>
+                                                    <th><b><i class="fa fa-paperclip fa-2x"></i></b></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="PaymentsBody"></tbody>
+                                        </table>
                                     </div>
                                     <div class="tab-pane fade" id="AdminAccounts" role="tabpanel">
                                         
@@ -49,52 +94,80 @@
 </div>
    
 @section scripts
-{
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+{ 
+    <script type="text/javascript" language="javascript" charset="utf-8" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" language="javascript">
-        $(document).ready( function(){
-            LoadUsers();
-            LoadBankAccounts();
-            LoadDonations();
-            LoadPayments();
+        $(document).ready(function () {
+            loadUsers();
+            loadBankAccounts();
+            loadDonations();
+            loadPayments();
+            modifyTable('#dataTable-Users')
+            modifyTable("#dataTable-BankAccount")
+            modifyTable("#dataTable-Donations")
+            modifyTable("#dataTable-Payments")
+           /* $('input.global_filter').on('keyup click', function () {
+                filterGlobal();
+            });
+            $('input.column_filter').on('keyup click', function () {
+                filterColumn($(this).parents('tr').attr('data-column'));
+            }); */
+            $('#UsersLink').click(function () {
+                $("#PanelTitle").text("Users");
+                loadUsers();
+            });
+            $("#AccountsLink").click(function () {
+                $("#PanelTitle").text("Accounts");
+                loadBankAccounts();
+            });
+            $("#DonationsLink").click(function () {
+                $("#PanelTitle").text("Donations");
+                loadDonations();
+            });
+            $('#PaymentsLink').click(function () {
+                $('#PanelTitle').text("Payments");
+                loadPayments();
+            });
+            $('#AdminAccountsLink').click(function () {
+                $('#PanelTitle').text("Admin Accounts");
+            });
         });
-        var LoadUsers = function () {
-            var url = "/Account/Users";
-            $('#Users').load(url);
+            function getActivePaneTableId() {
+                var TableId = $("div.tab-pane.active.in").first().children("table").attr("id");
+                return TableId;
+            }
+            function filterGlobal() {
+                var TableId = getActivePaneTableId();
+                $(TableId).DataTable().search(
+                    $('#global_filter').val(),
+                    $('#global_regex').prop('checked'),
+                    $('#global_smart').prop('checked')
+                ).draw();
+            }
+            function filterColumn(i) {
+                var TableId = getActivePaneTableId();
+            $(TableId).DataTable().column(i).search(
+                $('#col' + i + '_filter').val(),
+                $('#col' + i + '_regex').prop('checked'),
+                $('#col' + i + '_smart').prop('checked')
+            ).draw();
         }
-        var LoadBankAccounts = function () {
-            var url = "/BankAccounts/BankAccounts";
-            $("#Accounts").load(url);
+        function loadUsers(){
+            $('#UsersBody').load("/Account/Users");
         }
-        var LoadDonations = function() {
-            var url = "/Donations/Donations";
-            $("#Donations").load(url);
+        function loadBankAccounts(){
+            $("#AccountsBody").load("/BankAccounts/BankAccounts");
         }
-        var LoadPayments = function () {
-            var url = "/Payments/Payments";
-            $("#Payments").load(url);
+        function loadDonations(){
+            $("#DonationsBody").load("/Donations/Donations");
         }
-
-        $('#UsersLink').click(function () {
-            $("#PanelTitle").text("Users");
-            LoadUsers();
-        });
-        $("#AccountsLink").click(function () {
-            $("#PanelTitle").text("Accounts");
-            LoadBankAccounts();
-        });
-        $("#DonationsLink").click(function () {
-            $("#PanelTitle").text("Donations");
-            LoadDonations();
-        });
-        $('#PaymentsLink').click(function () {
-            $('#PanelTitle').text("Payments");
-            LoadPayments();
-        });
-        $('#AdminAccountsLink').click(function () {
-            $('#PanelTitle').text("Admin Accounts");
-            $('#AdminAccounts').load("/Accounts/AdminAccounts.html");
-        });
+        function loadPayments(){
+            $("#PaymentsBody").load("/Payments/Payments");
+        }
+        function modifyTable(TableId)
+        {
+            $(TableId).DataTable();
+        }
     </script>
     
     }

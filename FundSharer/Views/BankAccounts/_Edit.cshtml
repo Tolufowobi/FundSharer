@@ -1,0 +1,15 @@
+﻿@using FundSharer.Models;
+@model RegisterViewModel
+<dl class="text-info">
+    <dt>@Html.Label("Account Title")</dt>
+    <dd><div id="aAccountTitle">@Html.DisplayTextFor(m => Model.AccountTitle)</div></dd>
+    <dt>@Html.Label("Account Number")</dt>
+    <dd><div id="aAccountNumber">@Html.DisplayTextFor(m => Model.AccountNumber)</div></dd>
+    <dt>@Html.Label("Bank Name")</dt>
+    <dd><div id="aBankName">@Html.DisplayTextFor(m => Model.BankName)</div></dd>
+</dl>
+<hr />
+<div id="aButtons" class="EditButtons">
+    <button id="aButtonSubmit" class="btn btn-success" onclick="SaveChanges(aButtonSubmit)" hidden="hidden">Save</button>
+    <button id="aButtonCancel" class="btn btn-danger" onclick="Cancel(aButtonCancel)" hidden="hidden">Cancel</button>
+</div>

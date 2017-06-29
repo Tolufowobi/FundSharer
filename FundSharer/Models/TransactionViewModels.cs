@@ -10,6 +10,8 @@ namespace FundSharer.Models
     {
         public string DonationId { get; set; }
 
+        public string AccountId { get; set; }
+
         [Display(Name = "From")]
         public string DonorFullName { get; set; }
 
@@ -42,6 +44,8 @@ namespace FundSharer.Models
     public class BankAccountDetails
     {
         public string Id { get; set; }
+
+        public string OwnerId { get; set; }
 
         [Display(Name="Account Title")]
         public string AccountTitle { get; set; }
@@ -79,6 +83,8 @@ namespace FundSharer.Models
         [Display(Name="Number of Pending Incoming Donations")]
         public int PendingPaymentsCount { get; set; }
         
+        [Display(Name="Receiving")]
+        public bool IsReceiver { get; set; }
     }
 
     public class PaymentDetails

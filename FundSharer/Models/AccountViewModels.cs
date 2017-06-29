@@ -138,6 +138,8 @@ namespace FundSharer.Models
     {
         public string Id { get; set; }
 
+        public string AccountId { get; set; }
+
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
@@ -147,8 +149,13 @@ namespace FundSharer.Models
         [DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; }
 
+        [Display(Name="Last Login Time Log")]
         [DataType(DataType.DateTime)]
         public System.DateTime LastLoginDate { get; set; }
+
+        [Display(Name= "Locked")]
+        public bool IsLocked { get; set;}
+
     }
 
 }

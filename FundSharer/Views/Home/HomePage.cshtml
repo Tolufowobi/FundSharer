@@ -29,23 +29,9 @@
                     </div>
                 </div>
                 <div id="a1" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        @{ 
-                            var FirstName = ViewBag.FirstName;
-                            var LastName = ViewBag.LastName;
-                            var EmailAddress = ViewBag.EmailAddress;
-                            var PhoneNumber = ViewBag.PhoneNumber;
-                        }
-                        <dl class="text-info">
-                            <dt>@Html.Label("First Name")</dt>
-                           <dd><div>@Html.DisplayTextFor(m => FirstName)</div></dd>
-                            <dt>@Html.Label("Last Name")</dt>
-                            <dd><div>@Html.DisplayTextFor(m => LastName)</div></dd>
-                            <dt>@Html.Label("Email Address")</dt>
-                            <dd><div>@Html.DisplayTextFor(m => EmailAddress)</div></dd>
-                            <dt>@Html.Label("Phone Number")</dt>
-                            <dd><div>@Html.DisplayTextFor(m => PhoneNumber)</div></dd>
-                        </dl>
+                    <div class="panel-body" id="uPanel">
+                       @{UserDetails Ud = ViewBag.UserDetails;}
+                        @Html.Partial("_UserDetails", Ud)              
                     </div>
                 </div>
             </div>
@@ -194,20 +180,9 @@
                     </div>
                 </div>
                 <div id="b1" class="panel-collapse collapse">
-                    <div class="panel-body">
-                        @{
-                            var UserAccountTitle = ViewBag.AccountTitle;
-                            var UserAccountNumber = ViewBag.AccountNumber;
-                            var UserBankName = ViewBag.BankName;
-                        }
-                        <dl class="text-info">
-                            <dt>@Html.Label("Account Title")</dt>
-                            <dd><div>@Html.DisplayTextFor(m => UserAccountTitle)</div></dd>
-                            <dt>@Html.Label("Account Number")</dt>
-                            <dd><div>@Html.DisplayTextFor(m => UserAccountNumber)</div></dd>
-                            <dt>@Html.Label("Bank Name")</dt>
-                            <dd><div>@Html.DisplayTextFor(m => UserBankName)</div></dd>
-                        </dl>
+                    <div class="panel-body" id="aPanel">
+                        @{ BankAccountDetails Bd = ViewBag.BankAccountDetails;}
+                      @Html.Partial("_BankAccountDetails", Bd)
                     </div>
                 </div>
             </div>
@@ -317,4 +292,50 @@ Html.Action("Login", "Account");
 }
 @section scripts{
     <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script language="javascript" charset="utf-8" type="text/javascript">
+        function RenderEdit(LabelId) {
+            if (LabelId === "uEditLink")
+            {
+                $("#uPanel").load("Account/Edit");
+            }
+            if (LabelId === "aEditLink")
+            {
+                $("#aPanel").load("BankAccounts/Edit");
+            }
+        }
+        function SaveChanges(ButtonId)
+        {
+            if (ButtonId === "uButtonSubmit") {
+
+                var firstname = $("#uFName").children().first().val();
+                var lastname = $("#uLName").children().first().val();
+                var email = $("#uEmail").children().first().val();
+                var phn = $("#uPhone").children().first().val();
+                $.post("@Url.Action("Edit","Account")", { "FirstName": firstname, "LastName": lastname, "Email": email, "ContactNumber": phn }, function(data){
+                    alert("Changes saved.");
+                    $("#uPanel").html(data)
+                });
+                /*$("#uEditPanel").load("Account/Edit", { "FirstName" :firstname, "LastName" : lastname, "Email": email, "ContactNumber" : phn }, function(){alert("Changes saved.");});*/
+            }
+            if (ButtonId === "aButtonSubmit") {
+                var accounttitle = $("#aAccountTitle").children.first.val();
+                var accountnumber = $("#aAccountNumber").children.first.val();
+                var bankname = $("#aBankName").children.first.val();
+                $.post("@Url.Action("Edit", "BankAccounts")", { "AccountTitle": accounttitle, "AccountNumber": accountnumber, "BankName": bankname }, function(data){
+                    alert("Changes saved.");
+                    $("#aPanel").html(data);
+                });
+                /*$("#aEditPanel").load("BankAccounts/Edit", { "AccountTitle" : accounttitle, "AccountNumber" : accountnumber, "BankName" :  bankname }, function () { alert("Changes saved."); });*/
+            }
+        }
+        function Cancel(ButtonId)
+        {
+            if (ButtonId === "uButtonCancel") {
+                $("#uPanel").load("Account/PersonlInfo");
+            }
+            if (ButtonId === "aButtonCancel") {
+                $("#aPanel").load("BankAccounts/AccountInfo");
+            }
+        }
+    </script>
 }
