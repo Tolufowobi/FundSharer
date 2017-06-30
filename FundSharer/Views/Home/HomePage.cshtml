@@ -212,7 +212,7 @@
                                  }
                                  else
                                  {
-                                     if (ViewBag.AccountStatus == false)
+                                     if (ViewBag.BankAccountDetails.IsReceiver == false)
                                      {
                                         <div id="Change">
                                             @using (Ajax.BeginForm("FindAMatch", new AjaxOptions { HttpMethod = "POST", InsertionMode = InsertionMode.ReplaceWith, UpdateTargetId = "Change", }))
@@ -290,52 +290,7 @@ else
 {
 Html.Action("Login", "Account");
 }
+
 @section scripts{
     <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
-    <script language="javascript" charset="utf-8" type="text/javascript">
-        function RenderEdit(LabelId) {
-            if (LabelId === "uEditLink")
-            {
-                $("#uPanel").load("Account/Edit");
-            }
-            if (LabelId === "aEditLink")
-            {
-                $("#aPanel").load("BankAccounts/Edit");
-            }
-        }
-        function SaveChanges(ButtonId)
-        {
-            if (ButtonId === "uButtonSubmit") {
-
-                var firstname = $("#uFName").children().first().val();
-                var lastname = $("#uLName").children().first().val();
-                var email = $("#uEmail").children().first().val();
-                var phn = $("#uPhone").children().first().val();
-                $.post("@Url.Action("Edit","Account")", { "FirstName": firstname, "LastName": lastname, "Email": email, "ContactNumber": phn }, function(data){
-                    alert("Changes saved.");
-                    $("#uPanel").html(data)
-                });
-                /*$("#uEditPanel").load("Account/Edit", { "FirstName" :firstname, "LastName" : lastname, "Email": email, "ContactNumber" : phn }, function(){alert("Changes saved.");});*/
-            }
-            if (ButtonId === "aButtonSubmit") {
-                var accounttitle = $("#aAccountTitle").children.first.val();
-                var accountnumber = $("#aAccountNumber").children.first.val();
-                var bankname = $("#aBankName").children.first.val();
-                $.post("@Url.Action("Edit", "BankAccounts")", { "AccountTitle": accounttitle, "AccountNumber": accountnumber, "BankName": bankname }, function(data){
-                    alert("Changes saved.");
-                    $("#aPanel").html(data);
-                });
-                /*$("#aEditPanel").load("BankAccounts/Edit", { "AccountTitle" : accounttitle, "AccountNumber" : accountnumber, "BankName" :  bankname }, function () { alert("Changes saved."); });*/
-            }
-        }
-        function Cancel(ButtonId)
-        {
-            if (ButtonId === "uButtonCancel") {
-                $("#uPanel").load("Account/PersonlInfo");
-            }
-            if (ButtonId === "aButtonCancel") {
-                $("#aPanel").load("BankAccounts/AccountInfo");
-            }
-        }
-    </script>
 }

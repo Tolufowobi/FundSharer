@@ -22,6 +22,8 @@ namespace FundSharer.Models
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime EntryDate { get; set; }
 
+        public bool IsValid { get; set; }
+
         public virtual ICollection<Donation> Donations
         { get; set; }
 

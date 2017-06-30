@@ -185,7 +185,7 @@ namespace FundSharer.Controllers
                             AccountNumber = model.AccountNumber,
                             AccountTitle = model.AccountTitle,
                             Bank = model.BankName,
-                            IsReciever = false,
+                            IsReceiver = false,
                             Owner = user
                         };
                         // BankAccountServices.AddBankAccount(NewbankAccount); **
@@ -198,7 +198,7 @@ namespace FundSharer.Controllers
                         // so it is available for matching
                         if (noAvailableTickets == 0)
                         {
-                            NewbankAccount.IsReciever = true;
+                            NewbankAccount.IsReceiver = true;
                             //Create its ticket
                             WaitingTicket Ticket = new WaitingTicket
                             {
@@ -235,11 +235,12 @@ namespace FundSharer.Controllers
         public PartialViewResult Edit()
         { var uid = User.Identity.GetUserId();
             var usr = UserManager.FindById(uid);
-            RegisterViewModel mdl = new RegisterViewModel() { FirstName = usr.FirstName, LastName = usr.LastName, Email = usr.Email, ContactNumber = usr.PhoneNumber };
-            return PartialView("_Edit",mdl);
+            UserDetails mdl = new UserDetails() { FirstName = usr.FirstName, LastName = usr.LastName, UserName = usr.Email, PhoneNumber = usr.PhoneNumber };
+            return PartialView("_Edit", mdl);
         }
 
-        public PartialViewResult Edit(RegisterViewModel values)
+        [HttpPost]
+        public PartialViewResult Edit(UserDetails values)
         {
             if (values != null)
             {
@@ -249,17 +250,13 @@ namespace FundSharer.Controllers
                     var usr = UserManager.FindById(uid);
                     usr.FirstName = values.FirstName;
                     usr.LastName = values.LastName;
-                    usr.Email = values.Email;
-                    usr.PhoneNumber = values.ContactNumber;
+                    usr.Email = values.UserName;
+                    usr.PhoneNumber = values.PhoneNumber;
                     var result = UserManager.Update(usr);
                     if (result == IdentityResult.Success)
                     {
                         db.SaveChanges();
-                        ViewBag.FirstName = usr.FirstName;
-                        ViewBag.LastName = usr.LastName;
-                        ViewBag.PhoneNumber = usr.PhoneNumber;
-                        ViewBag.EmailAddress = usr.Email;
-                        return PartialView("_PersonalInfo");
+                        return PartialView("_UserDetails", values);
                     }
                     else
                     {

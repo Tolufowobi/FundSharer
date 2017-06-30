@@ -26,6 +26,6 @@ namespace FundSharer.Models
         public virtual ApplicationUser Owner { get; set; }
 
         [Display(Name = "Can Recieve Donations")]
-        public bool IsReciever { get; set; }
+        public bool IsReceiver { get; set; }
     }
 }

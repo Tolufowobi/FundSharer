@@ -49,13 +49,15 @@ namespace FundSharer.Controllers
 
                     }
                 }
-                return PartialView("_AccountDetails", bd);
+                return PartialView("_BankAccountDetails", bd);
             }
             else
             {
                 return HttpNotFound("Record not found");
             }
         }
+
+        
         public PartialViewResult Edit()
         {
             var uid = User.Identity.GetUserId();
@@ -65,11 +67,12 @@ namespace FundSharer.Controllers
                 acct = (from a in db.BankAccounts where a.OwnerId == uid select a).FirstOrDefault();
             }
                 
-                RegisterViewModel mdl = new RegisterViewModel() { AccountTitle = acct.AccountTitle, AccountNumber = acct.AccountNumber, BankName = acct.Bank };
+                BankAccountDetails mdl = new BankAccountDetails() { AccountTitle = acct.AccountTitle, AccountNumber = acct.AccountNumber, BankName = acct.Bank, Id=acct.Id };
             return PartialView("_Edit", mdl);
         }
 
-        public PartialViewResult Edit(RegisterViewModel values)
+        [HttpPost]
+        public PartialViewResult Edit(BankAccountDetails values)
         {
             if (values != null)
             {
@@ -83,10 +86,8 @@ namespace FundSharer.Controllers
                         ba.AccountNumber = values.AccountNumber;
                         ba.Bank = values.BankName;
                         db.SaveChanges();
-                        ViewBag.AccountTitle = ba.AccountTitle;
-                        ViewBag.AccountNumber = ba.AccountNumber;
-                        ViewBag.BankName = ba.Bank;
-                        return PartialView("AccountInfo");
+                        BankAccountDetails bd = new BankAccountDetails() { AccountTitle = ba.AccountTitle, AccountNumber = ba.AccountNumber, BankName = ba.Bank };
+                        return PartialView("_BankAccountDetails", bd);
                     }
                     else
                     {

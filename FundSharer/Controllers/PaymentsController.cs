@@ -173,7 +173,7 @@ namespace FundShare.Controllers
                     db.POPImages.Add(PopImg);
                     db.SaveChanges();
                 }
-                return RedirectToAction("HomePage", "Home");
+                return RedirectToAction("Welcome", "Home");
             }
             else
             {
@@ -222,7 +222,7 @@ namespace FundShare.Controllers
                     {
                         pay.Confirmed = true; // set its confirmation status to true
                         pay.DonationPack.IsOpen = true; // open its donation package
-                        pay.DonationPack.Donor.IsReciever = true; // set the donors receiver status to true
+                        pay.DonationPack.Donor.IsReceiver = true; // set the donors receiver status to true
                         var newticket = new WaitingTicket
                         {
                             TicketHolder = pay.DonationPack.Donor,
@@ -231,13 +231,14 @@ namespace FundShare.Controllers
                         }; // Create a ticket for the donor
                         db.WaitingList.Add(newticket);// add the ticket to record
                         db.SaveChanges();// save current changes
-                        if (pay.DonationPack.Ticket.Donations.Count > 1 && pay.DonationPack.Ticket.Donations.Where(m => m.IsOpen == false).Count() == 0)
+                        if (pay.DonationPack.Ticket.Donations.Count > 1 && pay.DonationPack.Ticket.Donations.Where(m => m.IsOpen == true).Count() == 2)
                         {//If the donation ticket has up to 2 donations and both hav been opened, change the status of the recipient.
-                            pay.DonationPack.Ticket.TicketHolder.IsReciever = false;
+                            pay.DonationPack.Ticket.TicketHolder.IsReceiver = false;
+                            pay.DonationPack.Ticket.IsValid = false;
                             db.SaveChanges();// save current changes
                         }
                     }
-                    return RedirectToAction("HomePage", "Home");
+                    return RedirectToAction("Welcome", "Home");
                 }
 
             }

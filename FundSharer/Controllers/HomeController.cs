@@ -81,7 +81,7 @@ namespace FundSharer.Controllers
             Donation PendingOutgoingDonation = null;
             Payment PendingOutgoingPayment = null;
 
-            if (UserBankAccount.IsReciever == false)
+            if (UserBankAccount.IsReceiver == false)
             {
                 if (OutgoingDonations.Where(m => m.IsOpen == false).Count() > 0)
                 {
@@ -134,11 +134,11 @@ namespace FundSharer.Controllers
             BankAccountDetails Bd = new BankAccountDetails
             {
                 AccountTitle = UserBankAccount.AccountTitle,
-                AccountNumber = UserBankAccount.AccountTitle,
+                AccountNumber = UserBankAccount.AccountNumber,
                 BankName = UserBankAccount.Bank,
-                IsReceiver = UserBankAccount.IsReciever
+                IsReceiver = UserBankAccount.IsReceiver
             };
-            ViewBag.BankAccounDetails = Bd;
+            ViewBag.BankAccountDetails = Bd;
 
             //Outgoing Payments Information
             ViewBag.OutgoingPayments = OutgoingPayments.Where(m => m.Confirmed == true).Select(m => m.CreationDate).ToList();
@@ -214,7 +214,7 @@ namespace FundSharer.Controllers
             {
                 AppUser = db.Users.Find(UserId);
                 BankAccount donor = (from ba in db.BankAccounts where ba.OwnerId == AppUser.Id select ba).FirstOrDefault();
-                WaitingTicket ticket = (from t in db.WaitingList where t.Donations.Count < 2 orderby t.EntryDate select t).FirstOrDefault();
+                WaitingTicket ticket = (from t in db.WaitingList where t.Donations.Count < 2 & t.IsValid ==true orderby t.EntryDate select t).FirstOrDefault();
                 if (ticket != null)
                 {
                     Donation NewDonation = new Donation

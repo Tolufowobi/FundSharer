@@ -140,13 +140,17 @@ namespace FundSharer.Models
 
         public string AccountId { get; set; }
 
+        [Display(Name="First Name")]
         public string FirstName { get; set; }
 
+        [Display(Name="Last Name")]
         public string LastName { get; set; }
 
+        [Display(Name="UserName/ Email")]
         public string UserName { get; set; }
 
         [DataType(DataType.PhoneNumber)]
+        [Display(Name="Phone Number")]
         public string PhoneNumber { get; set; }
 
         [Display(Name="Last Login Time Log")]

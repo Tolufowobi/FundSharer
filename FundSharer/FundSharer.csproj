@@ -247,6 +247,14 @@
     <Compile Include="Migrations\201706181827394_UpdateIdentityModel.Designer.cs">
       <DependentUpon>201706181827394_UpdateIdentityModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201706300250272_BankAccountModified.cs" />
+    <Compile Include="Migrations\201706300250272_BankAccountModified.Designer.cs">
+      <DependentUpon>201706300250272_BankAccountModified.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201706301243384_WaitingTicketMod.cs" />
+    <Compile Include="Migrations\201706301243384_WaitingTicketMod.Designer.cs">
+      <DependentUpon>201706301243384_WaitingTicketMod.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AdminAccount.cs" />
@@ -421,6 +429,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201706181827394_UpdateIdentityModel.resx">
       <DependentUpon>201706181827394_UpdateIdentityModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706300250272_BankAccountModified.resx">
+      <DependentUpon>201706300250272_BankAccountModified.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201706301243384_WaitingTicketMod.resx">
+      <DependentUpon>201706301243384_WaitingTicketMod.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

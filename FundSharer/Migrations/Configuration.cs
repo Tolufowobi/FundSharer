@@ -58,8 +58,9 @@ namespace FundSharer.Migrations
                     context.BankAccounts.Add(b);
                     if (counter == 0) // Create the first ticket 
                     {
-                        var firstticket = new WaitingTicket { EntryDate = DateTime.Now, TicketHolder = b, TicketHolderId = b.Id };
+                        var firstticket = new WaitingTicket { EntryDate = DateTime.Now, TicketHolder = b, TicketHolderId = b.Id, IsValid=true };
                         context.WaitingList.Add(firstticket);
+                        b.IsReceiver = true;
                     }
                     counter++;
                 }

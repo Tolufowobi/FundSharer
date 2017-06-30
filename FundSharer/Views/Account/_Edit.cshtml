@@ -1,21 +1,29 @@
 ﻿@using FundSharer.Models;
-@model RegisterViewModel 
+@model UserDetails 
 
+@using (Ajax.BeginForm("Edit", "Account", new { Model }, new AjaxOptions { HttpMethod = "post", InsertionMode = InsertionMode.Replace, UpdateTargetId = "uPanel" }))
+{
     <dl class="text-info">
         <dt>@Html.Label("First Name")</dt>
         <dd><div id="uFirstName">@Html.TextBoxFor(m => Model.FirstName)</div></dd>
         <dt>@Html.Label("Last Name")</dt>
         <dd><div id="uLastName">@Html.TextBoxFor(m => Model.LastName)</div></dd>
         <dt>@Html.Label("Email Address")</dt>
-        <dd><div id="uEmailAddress">@Html.TextBoxFor(m => Model.Email)</div></dd>
+        <dd><div id="uEmailAddress">@Html.TextBoxFor(m => Model.UserName)</div></dd>
         <dt>@Html.Label("Phone Number")</dt>
-        <dd><div id="uPhoneNumber">@Html.TextBoxFor(m => Model.ContactNumber)</div></dd>
-        
+        <dd><div id="uPhoneNumber">@Html.TextBoxFor(m => Model.PhoneNumber)</div></dd>
     </dl>
     <hr />
     <div id="uButtons" class="EditButtons">
-        <button id="uButtonSubmit" class="btn btn-success" onclick="SaveChanges(uButtonSubmit)" hidden="hidden">Save</button>
-        <button id="uButtonCancel" class="btn btn-danger" onclick="Cancel(uButtonCancel)" hidden="hidden">Cancel</button>
+        <input value="Save" type="submit" class="btn btn-success" />
+        <button id="uButtonCancel" class="btn btn-danger">Cancel</button>
     </div>
+    <script language="javascript" type="text/javascript">
+        $("#uButtonCancel").on("click", function () {
+            $("#uPanel").load("/Account/Details", {Id = Model.Id});
+        });
+    </script>
+}
+    
 
 
