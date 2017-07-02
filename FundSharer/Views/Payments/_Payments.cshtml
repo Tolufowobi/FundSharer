@@ -12,11 +12,11 @@
             <td>
                 @{ if (p.Status == true)
                     {
-                        <div class="alert alert-success">Confirmed</div>
+                        <button class="btn btn-xs btn-success" disabled>Confirmed</button>
                     }
                     else
                     {
-                        <div class="alert alert-danger">Awaiting Confirmation</div>
+                        <button class="btn btn-xs btn-danger" disabled>Awaiting Confirmation</button>
                     }
                 }
             </td>

@@ -10,6 +10,24 @@
     var Fname = identity.FindFirstValue(ClaimTypes.GivenName);
 
 <hr />
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+            </div>
+            <div class="modal-body" id="myModalBody">
+
+            </div>
+            <div class="modal-footer" id="myModalFooter">
+
+            </div>
+        </div>
+    </div>
+</div>
 <div class="row">
     <!--First Column-->
     <div class="col-md-6">
@@ -53,59 +71,8 @@
                     </div>
                     <div id="a2" class="panel-collapse collapse">
                         <div class="panel-body">
-                            <table class="table table-responsive table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Account Number</th>
-                                        <th>Bank Name</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @{ 
-                                        List<Dictionary<String, object>> IncomingDonations = ViewBag.PendingIncomingDonations;
-                                        if (IncomingDonations.Count > 0)
-                                        {
-                                            foreach (Dictionary<String, object> i in IncomingDonations)
-                                            {
-                                                var Name = i["Name"];
-                                                var AccountNumber = i["AccountNumber"];
-                                                var BankName = i["BankName"];
-                                                var PaymentId = i["PaymentId"];
-                                                var Confirmed = i["Confirmed"];
-                                                 <tr>
-                                                    <td>@Name</td>
-                                                    <td>@AccountNumber</td>
-                                                    <td>@BankName</td>
-                                                    @if (PaymentId != null)
-                                                    {
-                                                        if ((bool)Confirmed == true)
-                                                        {
-                                                            <td><div class="alert alert-success">Confirmed</div></td>
-                                                        }
-                                                        else
-                                                        {
-                                                            using (Html.BeginForm("ConfirmPayment", "Payments", new { Id = PaymentId }, FormMethod.Get, new { @class = "form-inline" }))
-                                                            {
-                                                                <td><input type="submit" class="btn btn-success btn-sm" value="Confirm Payment"/></td>
-                                                            }
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        <td><div class="alert alert-warning">Payment Pending</div></td>
-                                                    }
-                                                 </tr>
-                                            }
-                                        }
-                                        else
-                                        {
-                                            <tr><td>-</td><td>-</td><td>-</td><td>-</td></tr>
-                                        }
-                                    }
-                                </tbody>
-                                </table>
+                            @{List<Dictionary<string, object>> incomingDonations = ViewBag.PendingIncomingDonations; }
+                                @Html.Partial("_AccountDonations", incomingDonations)
                             </div>
                         </div>
                     </div>
@@ -293,4 +260,22 @@ Html.Action("Login", "Account");
 
 @section scripts{
     <script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+    <script language="javascript" type="text/javascript">
+        $(document).delegate(".confirm", "click", function () {
+            var PaymentId = $(this).attr("id");
+            $.get("/Payments/ConfirmPayment", { "Id": PaymentId }, function (data) {
+                $("#myModalBody").html(data);
+                $("#myModal").modal('toggle');
+            });
+        });
+        $(document).delegate("#confirmpayment", "click", function () {
+            var btn = document.getElementById('confirmpayment');
+            var Id = btn.getAttribute("data-PayId");
+            $.post("/Payments/ConfirmPayment", {"Id":Id }, function () {
+            alert("Thank you. Your payment has been confirmed.")
+            $("#"+Id).parent().html("<td><div class='alert alert- warning'>Payment Pending</div></td>");
+            $("#myModal").modal('toggle');
+            });
+        });
+    </script>
 }

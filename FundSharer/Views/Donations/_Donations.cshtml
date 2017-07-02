@@ -10,11 +10,11 @@
             <td>@Html.DisplayFor(m => d.DonationSetupDate)</td>
             <td>@if(d.Status == true)
             {
-                <div class="alert alert-success">Accepted</div>
+                <button class="btn btn-xs btn-success" disabled>Accepted</button>
             }
             else
             {
-                <div class="alert alert-danger">Pending</div>
+                <button class="btn btn-xs btn-danger" disabled>Pending</button>
             }
         </tr>
     }

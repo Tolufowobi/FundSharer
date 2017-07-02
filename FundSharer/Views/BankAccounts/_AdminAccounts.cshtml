@@ -1,0 +1,34 @@
+﻿@using FundSharer.Models
+@model IEnumerable<BankAccountDetails>
+
+@foreach (BankAccountDetails bd in Model)
+{
+    @Html.Partial("_AdminAccountRow", bd)
+}
+
+<script language="javascript" type="text/javascript"> 
+    $(document).delegate(".Toggle", "click", function () {
+        var btn = this;
+        var Rowid = $(btn).parent().parent().attr("id");
+        var txt = $(btn).text();
+        if (txt == "Activate") {
+            $.post("/BankAccounts/Activate", {"Id":Rowid}, function () {
+                $(btn).attr("class", "btn btn-xs btn-danger Toggle");
+                $(btn).html("Deactivate");
+            });
+        }
+        else if (txt == "Deactivate") {
+            $.post("/BankAccounts/Deactivate", {"Id":Rowid}, function () {
+                $(btn).attr("class", "btn btn-xs btn-primary Toggle");
+                $(btn).html("Activate");
+            });
+        }
+    });
+    $(document).delegate(".Confirmation", "click", function () {
+        var Rowid = $(this).parent().parent().attr("id");
+        $.post("/BankAccounts/ConfirmPayments", { Rowid }, function (data) {
+            $("#myModalLabel").text("Confirm Payments");
+            $("#myModalBody").html(data);
+        });
+    });
+</script>

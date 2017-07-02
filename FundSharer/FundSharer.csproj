@@ -389,6 +389,11 @@
     <Content Include="Views\BankAccounts\_AccountInfo.cshtml" />
     <Content Include="Views\BankAccounts\_Edit.cshtml" />
     <Content Include="Views\Shared\_UserDetails.cshtml" />
+    <Content Include="Views\BankAccounts\_AdminAccounts.cshtml" />
+    <Content Include="Views\Shared\_AccountDonations.cshtml" />
+    <Content Include="Views\Shared\_ConfirmPayment.cshtml" />
+    <Content Include="Views\BankAccounts\_NewAccount.cshtml" />
+    <Content Include="Views\Shared\_AdminAccountRow.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

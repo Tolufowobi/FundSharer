@@ -2,7 +2,24 @@
 @{
     ViewBag.Title = "Dashboard";
 }
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+            </div>
+            <div class="modal-body" id="myModalBody">
 
+            </div>
+            <div class="modal-footer" id="myModalFooter">
+
+            </div>
+        </div>
+    </div>
+</div>
 <div id="wrapper">
     <div class="panel panel-default">
         <div class="panel-heading">
@@ -82,7 +99,25 @@
                                         </table>
                                     </div>
                                     <div class="tab-pane fade" id="AdminAccounts" role="tabpanel">
-                                        
+
+                                        <div class="row">
+                                            <table id="dataTable-AdminAccounts">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Account Title</th>
+                                                        <th>Account Number</th>
+                                                        <th>Bank Name</th>
+                                                        <th>Incoming Payments Count</th>
+                                                        <th>Last Payment Date</th>
+                                                        <th>Pending Payments</th>
+                                                        <th>-</th>
+                                                        <th>-</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="AdminAccountsBody"></tbody>
+                                            </table>
+                                        </div>
+                                        <div class="row" style="padding-left:2em"><button id ="AddButton" class="btn btn-success" data-toggle="modal" data-target="#myModal">Add a new Account</button></div>
                                     </div>
                                 </div>
                             </div>
@@ -102,10 +137,12 @@
             loadBankAccounts();
             loadDonations();
             loadPayments();
+            loadAdminAccounts();
             modifyTable('#dataTable-Users')
             modifyTable("#dataTable-BankAccount")
             modifyTable("#dataTable-Donations")
             modifyTable("#dataTable-Payments")
+            modifyTable("#dataTable-AdminAccounts")
            /* $('input.global_filter').on('keyup click', function () {
                 filterGlobal();
             });
@@ -130,6 +167,11 @@
             });
             $('#AdminAccountsLink').click(function () {
                 $('#PanelTitle').text("Admin Accounts");
+            });
+            $("#AddButton").click(function () {
+                $("#myModalBody").load("/BankAccounts/AddNewAccount", function () {
+                    $("#myModalLabel").contents().first().text("Add a new account");
+                }); 
             });
         });
             function getActivePaneTableId() {
@@ -163,6 +205,9 @@
         }
         function loadPayments(){
             $("#PaymentsBody").load("/Payments/Payments");
+        }
+        function loadAdminAccounts() {
+            $("#AdminAccountsBody").load("/BankAccounts/AdminAccounts");
         }
         function modifyTable(TableId)
         {

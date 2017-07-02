@@ -1,0 +1,34 @@
+﻿@using FundSharer.Models
+@model BankAccountDetails
+
+<tr id="@Model.Id">
+    <td>@Html.DisplayFor(m => Model.AccountTitle)</td>
+    <td>@Html.DisplayFor(m => Model.AccountNumber)</td>
+    <td>@Html.DisplayFor(m => Model.BankName)</td>
+    <td>@Html.DisplayFor(m => Model.IncomingPaymentsCount)</td>
+    <td>@Html.DisplayFor(m => Model.LastIncomingDonationDate)</td>
+    @{Html.DisplayFor(m => Model.PendingPaymentsCount);
+        if (Model.PendingPaymentsCount > 0)
+        {
+            <td><button type="button" class="btn btn-xs btn-success confirm" data-toggle="modal" data-target="#myModal">Confirm Payments</button> </td>
+            <td><buttton id="@Model.Id" class="btn-warning" disabled>Deactivate</buttton></td>
+            <td><button class="btn btn-xs btn-danger" disabled>Delete</button></td>
+        }
+        else
+        { 
+            <td><button type="button" class="btn btn-xs btn-default" disabled>No Payments</button></td>
+            <td>
+            @if (Model.IsReceiver == false)
+            {
+                <button id="@Model.Id" class="btn btn-xs btn-primary Toggle">Activate</button>
+            }
+            else
+            {
+                <buttton id="@Model.Id" class="btn btn-xs btn-danger Toggle">Deactivate</buttton>
+            }
+            </td>
+            <td><button class="btn btn-xs btn-danger">Delete</button></td>
+            }
+    }
+</tr>
+

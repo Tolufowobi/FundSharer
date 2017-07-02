@@ -214,16 +214,22 @@ namespace FundSharer.Controllers
             {
                 AppUser = db.Users.Find(UserId);
                 BankAccount donor = (from ba in db.BankAccounts where ba.OwnerId == AppUser.Id select ba).FirstOrDefault();
-                WaitingTicket ticket = (from t in db.WaitingList where t.Donations.Count < 2 & t.IsValid ==true orderby t.EntryDate select t).FirstOrDefault();
-                if (ticket != null)
+                string AdminUid = (from r in db.Roles where r.Name == "Administrator" select r).FirstOrDefault().Users.FirstOrDefault().UserId;
+                WaitingTicket Ticket = (from t in db.WaitingList where t.Donations.Count < 2 && t.IsValid == true && t.TicketHolderId == AdminUid orderby t.EntryDate select t).FirstOrDefault();
+                if(Ticket == null)
+                {
+                    Ticket = (from t in db.WaitingList where t.Donations.Count < 2 & t.IsValid == true orderby t.EntryDate select t).FirstOrDefault();
+                }
+             
+                if (Ticket != null)
                 {
                     Donation NewDonation = new Donation
                     {
                         Donor = donor,
                         DonorId = donor.Id,
                         IsOpen = false,
-                        Ticket = ticket,
-                        TicketId = ticket.Id,
+                        Ticket = Ticket,
+                        TicketId = Ticket.Id,
                         CreationDate = DateTime.Now
                     };
                     db.Donations.Add(NewDonation);

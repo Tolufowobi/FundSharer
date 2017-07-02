@@ -101,6 +101,132 @@ namespace FundSharer.Controllers
             }
         }
 
+        [Authorize(Roles="Administrator")]
+        public ActionResult AdminAccounts()
+        {
+            var uid = User.Identity.GetUserId();
+            List<BankAccountDetails> AdminAccounts = new List<BankAccountDetails>();
+            using (var db = new ApplicationDbContext())
+            {
+                var AdmAcc = (from b in db.BankAccounts where b.OwnerId == uid select b).ToList();
+                if (AdmAcc.Count > 0)
+                {
+                    foreach (BankAccount b in AdmAcc)
+                    {
+                        BankAccountDetails bd = CreateBankAccountDetails(b);
+                        bd.PendingPaymentsCount = (from p in db.Payments where b.Id == p.DonationPack.Ticket.TicketHolderId && p.Confirmed == false select p).Count();
+                        AdminAccounts.Add(bd);
+                    }
+                } 
+            }
+            return PartialView("_AdminAccounts", AdminAccounts);
+        }
+
+        [Authorize(Roles="Administrator")]
+        public ActionResult AdminDonations(string Id)
+        {
+            List<Dictionary<string, object>> Pds = new List<Dictionary<string, object>>();
+            using (var db = new ApplicationDbContext())
+            {
+                var acct = db.BankAccounts.Find(Id);
+                if (acct != null)
+                {
+                    var Ps = DataServices.PaymentServices.GetIncomingPaymentsForAccount(acct);
+                    foreach(Payment p in Ps)
+                    {
+                        if (p.Confirmed==false)
+                        {
+                            Dictionary<string, object> pd = new Dictionary<string, object>();
+                            pd.Add("Name", p.DonationPack.Donor.AccountTitle);
+                            pd.Add("AccountNumber", p.DonationPack.Donor.AccountNumber);
+                            pd.Add("BankName", p.DonationPack.Donor.Bank);
+                            pd.Add("PaymentId", p.Id);
+                            pd.Add("Confirmed", p.Confirmed);
+                            Pds.Add(pd);
+                        }
+                        
+                    }
+                }
+                
+            }
+            return PartialView("_AccountDonations", Pds);
+        }
+
+        [Authorize(Roles="Administrator")]
+        public ActionResult AddNewAccount()
+        {
+            return PartialView("_NewAccount");
+        }
+
+        [HttpPost]
+        [Authorize(Roles="Administrator")]
+        public ActionResult AddNewAccount(BankAccountDetails NewAccount)
+        {
+            using (var db = new ApplicationDbContext())
+            {
+                var testaccount = (from a in db.BankAccounts where a.AccountTitle == NewAccount.AccountTitle && a.AccountNumber == NewAccount.AccountNumber && a.Bank == NewAccount.BankName select a).Count();
+                if(testaccount == 0)
+                {
+                    var uid = User.Identity.GetUserId();
+                    BankAccount B = new BankAccount() { AccountNumber = NewAccount.AccountNumber, AccountTitle = NewAccount.AccountTitle, Bank = NewAccount.BankName, OwnerId = uid };
+                    db.BankAccounts.Add(B);
+                    db.SaveChanges();
+                }
+            } 
+            return Json("_NewAccount");
+        }
+
+        [Authorize(Roles="Administrator")]
+        public JsonResult Activate(String Id)
+        {
+            BankAccountDetails bd = null;
+            using (var db = new ApplicationDbContext())
+            {
+                var acct = (from a in db.BankAccounts where a.Id == Id select a).FirstOrDefault();
+                if (acct!= null && acct.IsReceiver == false)
+                {
+                    acct.IsReceiver = true;
+                    //create an open ticket for the account
+                    WaitingTicket adminTicket = new WaitingTicket { EntryDate = DateTime.Now, IsValid = true, TicketHolderId = acct.Id };
+                    db.WaitingList.Add(adminTicket);
+                    db.SaveChanges();
+                     bd = CreateBankAccountDetails(acct);
+                }
+            }
+            return Json("Done");
+        }
+
+
+        [Authorize(Roles="Administrator")]
+        public JsonResult Deactivate(string Id)
+        {
+            BankAccountDetails bd = null;
+            using (var db = new ApplicationDbContext())
+            {
+                var acct = (from a in db.BankAccounts where a.Id == Id select a).FirstOrDefault();
+                if (acct != null && acct.IsReceiver == true)
+                {
+                    acct.IsReceiver = false;
+                    //remove any existing waiting tickets from the waiting ticket repository
+                    WaitingTicket tckt = (from t in db.WaitingList where t.TicketHolderId == acct.Id && t.IsValid == true select t).FirstOrDefault();
+                    if(tckt != null)
+                    {
+                        if(tckt.Donations != null)
+                        {
+                            foreach (Donation d in tckt.Donations)
+                            {
+                                db.Donations.Remove(d);
+                            }
+                            db.WaitingList.Remove(tckt);
+                        }
+                    }
+                    db.SaveChanges();
+                    bd = CreateBankAccountDetails(acct);
+                }
+            }
+            return Json("Done");
+        }
+
         internal List<BankAccountDetails> getBankAccountsDetails()
         {
             List<BankAccountDetails> BankAccountList = new List<BankAccountDetails>();
@@ -127,6 +253,11 @@ namespace FundSharer.Controllers
             return BankAccountList;
         }
 
+        private BankAccountDetails CreateBankAccountDetails(BankAccount bankAccount)
+        {
+            BankAccountDetails bd = new BankAccountDetails { Id = bankAccount.Id, AccountNumber = bankAccount.AccountNumber, AccountTitle = bankAccount.AccountTitle, BankName = bankAccount.Bank, IsReceiver = bankAccount.IsReceiver };
+            return bd;
+        }
     }
 
 }

@@ -199,7 +199,7 @@ namespace FundShare.Controllers
                     Date = pay.CreationDate.ToShortDateString(),
                     POPimage = img.Image
                 };
-                return View("ConfirmPayment", details);
+                    return PartialView("_ConfirmPayment", details);
             }
             else
             {
@@ -210,7 +210,6 @@ namespace FundShare.Controllers
         //POST
         [HttpPost]
         [ActionName("ConfirmPayment")]
-        [ValidateAntiForgeryToken]
         public ActionResult PaymentConfirmed(string Id)
         {
             if (Id != null)
@@ -238,7 +237,7 @@ namespace FundShare.Controllers
                             db.SaveChanges();// save current changes
                         }
                     }
-                    return RedirectToAction("Welcome", "Home");
+                        return Json("Done");
                 }
 
             }

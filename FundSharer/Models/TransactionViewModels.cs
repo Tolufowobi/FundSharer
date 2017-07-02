@@ -47,12 +47,15 @@ namespace FundSharer.Models
 
         public string OwnerId { get; set; }
 
+        [Required]
         [Display(Name="Account Title")]
         public string AccountTitle { get; set; }
 
+        [Required]
         [Display (Name="Account Number")]
         public string AccountNumber { get; set; }
 
+        [Required]
         [Display(Name= "Bank Name")]
         public string BankName { get; set; }
         

@@ -1,0 +1,45 @@
+﻿@using FundSharer.Models;
+@model BankAccountDetails
+
+@using (Ajax.BeginForm("AddNewAccount", "BankAccount", new AjaxOptions { HttpMethod = "post", OnSuccess= "NewAccount()" , UpdateTargetId = "myModalBody", InsertionMode= InsertionMode.Replace}, new { @class = "form-horizontal", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+    <h4>Create a new account.</h4>
+    <hr />
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+    <div class="form-group">
+
+        <div class="form-group">
+            @Html.LabelFor(m => m.AccountTitle, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.AccountTitle, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.BankName, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.BankName, new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(m => m.AccountNumber, new { @class = "col-md-2 control-label" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.AccountNumber, new { @class = "form-control" })
+            </div>
+        </div>
+
+    </div>
+    <div class="col-md-offset-2 col-md-10">
+        <input type="submit" class="btn btn-primary" value="Add Account" />
+    </div>
+
+}
+
+@section Scripts {
+@Scripts.Render("~/bundles/jqueryval")
+    <script language="javascript" type="text/javascript">
+    var NewAccount = function(){
+        $("#myModalBody").load("/BankAccounts/AddNewAccount");
+    } 
+</script>
+}

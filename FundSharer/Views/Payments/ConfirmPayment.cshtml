@@ -6,47 +6,13 @@
 }
 
 <div class="Row">
-    <div class="col-md-12">
+    <div class="col-md-offset-2 col-md--8">
         <div class="panel panel-success text-info">
             <div class="panel-heading">
                 <div class="panel-title">Please confirm the payment from @Model.DonorName</div>
             </div>
             <div class="panel-body">
-                <div class="form-inline">
-                        @using (Html.BeginForm("ConfirmPayment", "Payments", FormMethod.Post, new { Id = Model.PaymentId }))
-                        {
-                       <div class="row">
-                        <div class="col-md-5">
-                            @Html.AntiForgeryToken()
-                            <dl class="dl-horizontal h4">
-                                <dt>@Html.DisplayNameFor(m => Model.RecipientName)</dt>
-                                <dd>@Html.DisplayFor(m => Model.RecipientName)</dd>
-
-                                <dt>@Html.DisplayNameFor(m => Model.Date)</dt>
-                                <dd>@Html.DisplayFor(m => Model.Date)</dd>
-                            </dl>
-                        </div>
-                        <div class="col-md-5">
-                            @{
-                                var base64 = Convert.ToBase64String(Model.POPimage, 0, Model.POPimage.Length);
-                                var imgsrc = String.Format("data:image/jpg;base64,{0}", base64);
-                            }
-                            <div class="img-responsive"><img src='@imgsrc' class="img-responsive media-middle" /></div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-3">
-                            <input type="submit" class="btn btn-success btn-lg btn-block" value="Confirm"/>
-                        </div>
-                        <div class="col-md-3">
-                            <button type="reset" class="btn btn-danger btn-lg btn-block">Cancel</button>
-                        </div>
-                        <div class="col-md-3">
-                            <div><i class="fa fa-warning fa-3x"></i>@Html.ActionLink("Report an issue", "Report", "Manage", new { Id = Model.PaymentId })</div>
-                        </div>
-                    </div>
-                 }
-                </div>
+                @Html.Partial("_ConfirmPayment", Model)
             </div>
         </div>
     </div>
