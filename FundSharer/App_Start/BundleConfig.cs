@@ -34,7 +34,7 @@ namespace FundSharer
                       "~/Content/site.css"));
 
             bundles.Add(new StyleBundle("~/Content/extras").Include(
-                "~/Content/metisMenu.css", "~/Content/morris.css", "~/Content/sb-admin-2.css"));
+                "~/Content/metisMenu.css", "~/Content/morris.css", "~/Content/sb-admin-2.css", "~/Content/StyleSheet1.scss"));
         }
     }
 }

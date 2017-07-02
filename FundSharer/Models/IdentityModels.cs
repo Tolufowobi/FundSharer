@@ -54,7 +54,6 @@ namespace FundSharer.Models
         public DbSet<Donation> Donations { get; set; }
         public DbSet<POPImage> POPImages { get; set; }
         public DbSet<WaitingTicket> WaitingList { get; set; }
-        public DbSet<AdminAccount> AdminAccounts { get; set; }
         public DbSet<RevenueTarget> IncomeTarget { get; set; }
 
         public static ApplicationDbContext Create()

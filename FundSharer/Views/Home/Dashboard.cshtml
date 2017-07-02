@@ -39,7 +39,7 @@
                                         </table>
                                     </div>
                                     <div class="tab-pane fade" id="Accounts" role="tabpanel">
-                                        <table id="dataTable-BankAccount">
+                                        <table id="dataTable-BankAccounts">
                                             <thead>
                                                 <tr>
                                                     <th>Account Name</th>
@@ -143,26 +143,29 @@
             ).draw();
         }
         function loadUsers(){
-            $('#UsersBody').load("/Account/Users", , function () {
+            $('#UsersBody').load("/Account/Users",function () {
                 modifyTable('#dataTable-Users');
             });
         }
         function loadBankAccounts(){
-            $("#AccountsBody").load("/BankAccounts/BankAccounts", , function () {
-                modifyTable("#dataTable-BankAccount");
+            $("#AccountsBody").load("/BankAccounts/BankAccounts",function () {
+                modifyTable("#dataTable-BankAccounts");
             });
         }
         function loadDonations(){
-            $("#DonationsBody").load("/Donations/Donations");
-            modifyTable("#dataTable-Donations");
+            $("#DonationsBody").load("/Donations/Donations", function () {
+                modifyTable("#dataTable-Donations");
+            });
         }
         function loadPayments(){
-            $("#PaymentsBody").load("/Payments/Payments");
-            modifyTable("#dataTable-Payments");
+            $("#PaymentsBody").load("/Payments/Payments", function() {
+                modifyTable("#dataTable-Payments");
+            });
         }
         function loadAdminAccounts() {
-            $("#AdminAccountsBody").load("/BankAccounts/AdminAccounts");
-            modifyTable("#dataTable-AdminAccounts");
+            $("#AdminAccountsBody").load("/BankAccounts/AdminAccounts", function () {
+                modifyTable("#dataTable-AdminAccounts");
+            });
         }
         function modifyTable(TableId)
         {

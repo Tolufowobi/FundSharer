@@ -18,9 +18,6 @@ namespace FundSharer.Migrations
         {
 
             // Reset the database
-            
-            //AdminAccounts
-            context.AdminAccounts.RemoveRange(context.AdminAccounts.ToList());
 
             //BankAccounts
             context.BankAccounts.RemoveRange(context.BankAccounts.ToList());
@@ -41,7 +38,7 @@ namespace FundSharer.Migrations
             var Users = (from u in context.Users select u).ToList();
 
             //Create Bank Accounts
-            String[] Banks = {"GTB", "UBA", "Fidelity", "First Bank" };
+            String[] Banks = { "GTB", "UBA", "Fidelity", "First Bank" };
             int counter = 0;
             foreach (ApplicationUser User in Users)
             {
@@ -58,13 +55,13 @@ namespace FundSharer.Migrations
                     context.BankAccounts.Add(b);
                     if (counter == 0) // Create the first ticket 
                     {
-                        var firstticket = new WaitingTicket { EntryDate = DateTime.Now, TicketHolder = b, TicketHolderId = b.Id, IsValid=true };
+                        var firstticket = new WaitingTicket { EntryDate = DateTime.Now, TicketHolder = b, TicketHolderId = b.Id, IsValid = true };
                         context.WaitingList.Add(firstticket);
                         b.IsReceiver = true;
                     }
                     counter++;
                 }
-                
+
             }
         }
     }

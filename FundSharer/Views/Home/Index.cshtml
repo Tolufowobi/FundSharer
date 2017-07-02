@@ -2,14 +2,16 @@
     ViewBag.Title = "Welcome";
 }
 
-<div class=" panel-info panel-body jumbotron text-center">
-    <h1>App name</h1>
-    <p class="lead">Join and start making a difference today!</p>
+<div class=" panel-info panel-body jumbotron text-center fade">
+    <div>
+        <h1 class="flicker">ExcElsior</h1>
+        <p class="lead flicker">Join and start making a difference today!</p>
+    </div>
 </div>
 
 <div class="row">
         <div class="col-md-4">
-            <div class="well bg-info text-center">
+            <div class="well bg-info text-center fade">
                 <h2>About Us</h2>
                 <p>
                     Shared fund is a community where people assits one another on a platform that facilitates
@@ -19,7 +21,7 @@
             </div>
     </div>
         <div class="col-md-4">
-            <div class="well bg-success text-center">
+            <div class="well bg-success text-center fade">
                 <h2>How it Works</h2>
                 <ul>
                     <li><p>A member donate a sum of #50,000 to a designated beneficiary member assigned by the same.</p></li>
@@ -41,7 +43,7 @@
     </div>
 </div>
 <div class="panel-danger">
-    <div class="row jumbotron">
+    <div class="row jumbotron text-center text-info text-capitalize">
         <h3>What you get:</h3>
         <ul>
             <li>2 to 1 Matrix auto recylce system</li>
@@ -50,3 +52,14 @@
         </ul>
     </div>
 </div>
+@section scripts{
+    <script language="javascript" type="text/javascript" charset="utf-8">
+        $(document).delegate("#loginLink", "click", function () {
+            $.get("/Account/Login", null, function (data) {
+                $("#myModalLabel").text(Login);
+                $("#myModalBody").html(data);
+                $("#myModal").modal('toggle');
+            });
+        });
+    </script>
+    }

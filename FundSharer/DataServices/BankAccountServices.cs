@@ -75,19 +75,7 @@ namespace FundSharer.DataServices
                 }
             }
         }
-
-        static public AdminAccount GetAdminBankAccount(string AdminAccountId)
-        {
-            AdminAccount AdmAc = null;
-            
-                List<AdminAccount> List = (from adm in DbAccessHandler.DbContext.AdminAccounts where adm.Id == AdminAccountId select adm).ToList();
-                if (List.Count() > 0)
-                {
-                    AdmAc = List.First();
-                }
-            
-            return AdmAc;
-        }
+        
         public static List<BankAccount> GetBankAccounts()
         {
             DbAccessHandler.DbContext.BankAccounts.Load();

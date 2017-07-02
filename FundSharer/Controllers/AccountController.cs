@@ -61,7 +61,7 @@ namespace FundSharer.Controllers
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            return PartialView("_Login");
         }
 
         //
@@ -73,7 +73,7 @@ namespace FundSharer.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return PartialView("_Login", model);
             }
 
             // This doesn't count login failures towards account lockout
@@ -82,7 +82,6 @@ namespace FundSharer.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    
                         return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -91,7 +90,7 @@ namespace FundSharer.Controllers
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Invalid login attempt.");
-                    return View(model);
+                    return View("_Login",model);
             }
         }
 
