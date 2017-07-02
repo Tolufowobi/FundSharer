@@ -31,4 +31,12 @@
             $("#myModalBody").html(data);
         });
     });
+    $(document).delegate(".Delete", "click", function(){
+        var DataRow = $(this).parents("tr");
+        var id = DataRow.attr("id");
+        $.post("/BankAccounts/Delete", { id }, function () {
+            var adminAccountsTable = $("#dataTable-AdminAccounts").DataTable();
+            adminAccountsTable.row(DataRow).remove().draw();
+        });
+    });
 </script>

@@ -24,7 +24,35 @@ namespace FundSharer.Controllers
             var BankAccountList = getBankAccountsDetails();
             return PartialView("_BankAccounts", BankAccountList);
         }
-        
+
+        [Authorize(Roles ="Administrator")]
+        public ActionResult Delete(string Id)
+        {
+            using (var db = new ApplicationDbContext())
+            {
+                BankAccount ac = (from a in db.BankAccounts where a.Id == Id select a).FirstOrDefault();
+                if(ac != null)
+                {
+                    //retrieve any waiting ticket on and pending donation matches for the account and delete them
+                    WaitingTicket tkt = (from t in db.WaitingList where t.TicketHolderId == ac.Id && t.IsValid == true select t).FirstOrDefault();
+                    if(tkt.Donations.Count() > 0)
+                    {
+                        foreach(Donation d in tkt.Donations)
+                        {
+                            // delete the unserviced donations for the account's ticket
+                            db.Donations.Remove(d);
+                        }
+                        // delete the account's ticket
+                        db.WaitingList.Remove(tkt);
+                    }
+                    //delete the account
+                    db.BankAccounts.Remove(ac);
+                    db.SaveChanges();
+                }
+                return Json("done");
+            }
+        }
+
         public ActionResult Details(string Id)
         {
             if(Id != null)
