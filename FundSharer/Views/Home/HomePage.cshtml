@@ -13,7 +13,7 @@
 <div class="row">
     <!--First Column-->
     <div class="col-md-6">
-        <div class="panel-group" id="acc1">
+        <div class="panel-group shaker" id="acc1">
             <!--Personal Information-->
             <div class="panel panel-info">
                 <div class="panel-heading">
@@ -23,7 +23,7 @@
                         </div>
                         <div class="col-sm-9 text-right">
                             <div class="huge">
-                                <a data-toggle="collapse" data-parent="#acc1" href="#a1">Personal Information</a>
+                                <a id="aa1" class="bouncer" data-toggle="collapse" data-parent="#acc1" href="#a1"><p>Personal Information</p></a>
                             </div>
                         </div>
                     </div>
@@ -37,7 +37,7 @@
             </div>
             </div>
             <!--My Donors-->
-            <div class="panel-group" id="acc2">
+            <div class="panel-group shaker" id="acc2">
                 <div class="panel panel-success">
                     <div class="panel-heading">
                         <div class="row">
@@ -46,7 +46,7 @@
                             </div>
                             <div class="col-sm-9 text-right">
                                 <div class="huge">
-                                    <a data-toggle="collapse" data-parent="#acc2" href="#a2">My Donors</a>
+                                    <a id="aa2" class="bouncer" data-toggle="collapse" data-parent="#acc2" href="#a2"><p>My Donors</p></a>
                                 </div>
                             </div>
                         </div>
@@ -60,7 +60,7 @@
                     </div>
                 </div>
     <!--Incoming Donations History-->
-    <div class="panel-group" id="acc3">
+    <div class="panel-group shaker" id="acc3">
             <div class="panel panel-red">
                 <div class="panel-heading">
                     <div class="row">
@@ -69,7 +69,7 @@
                         </div>
                         <div class="col-sm-9 text-center">
                             <div class="huge">
-                                <a data-toggle="collapse" data-parent="#acc3" href="#a3">Incoming Donations History</a>
+                                <a id="aa3" class="bouncer" data-toggle="collapse" data-parent="#acc3" href="#a3"><p>Incoming Donations History</p></a>
                             </div>
                         </div>
                     </div>
@@ -114,7 +114,7 @@
     <!--Second Column-->
     <div class="col-md-6">
         <!--Account Information-->
-        <div class="panel-group" id="acc4">
+        <div class="panel-group shaker" id="acc4">
             <div class="panel panel-danger">
                 <div class="panel-heading">
                     <div class="row">
@@ -123,7 +123,7 @@
                         </div>
                         <div class="col-sm-9 text-right">
                             <div class="huge">
-                                <a data-toggle="collapse" data-parent="#acc4" href="#b1">Account Information</a>
+                                <a id="bb1" class="bouncer" data-toggle="collapse" data-parent="#acc4" href="#b1"><p>Account Information</p></a>
                             </div>
                         </div>
                     </div>
@@ -137,7 +137,7 @@
             </div>
         </div>
             <!--Donation-->
-            <div class="panel-group" id="acc5">
+            <div class="panel-group shaker" id="acc5">
                 <div class="panel panel-green">
                     <div class="panel-heading">
                         <div class="row">
@@ -146,7 +146,7 @@
                             </div>
                             <div class="col-sm-9 text-right">
                                 <div class="huge">
-                                    <a data-toggle="collapse" data-parent="#acc5" href="#b2">Donation</a>
+                                    <a id="bb2" class="bouncer" data-toggle="collapse" data-parent="#acc5" href="#b2"><p>Donation</p></a>
                                 </div>
                             </div>
                         </div>
@@ -182,7 +182,7 @@
                 </div>
             </div>
             <!--Outgoing Donations History-->
-        <div class="panel-group" id="acc6">
+        <div class="panel-group shaker" id="acc6">
             <div class="panel panel-yellow">
                 <div class="panel-heading">
                     <div class="row">
@@ -191,7 +191,7 @@
                         </div>
                         <div class="col-sm-9 text-center">
                             <div class="huge">
-                                <a data-toggle="collapse" data-parent="#acc6" href="#b3">Outgoing Donations History</a>
+                                <a id ="bb3" class="bouncer" data-toggle="collapse" data-parent="#acc6" href="#b3"><p>Outgoing Donations History</p></a>
                             </div>
                         </div>
                     </div>
@@ -258,6 +258,20 @@ Html.Action("Login", "Account");
             $("#"+Id).parent().html("<td><div class='alert alert- warning'>Payment Pending</div></td>");
             $("#myModal").modal('toggle');
             });
+        });
+        $(document).delegate("a.bouncer", "mouseover", function () {
+            var lnk = this;
+            $(lnk).children("p").addClass("animated bounce");
+        });
+        $(document).delegate("a.bouncer", "mouseleave", function () {
+            var lnk = this;
+            $(lnk).children("p").removeClass("animated bounce");
+        });
+        $(document).delegate("div.shaker", "mouseover", function () {
+            $(this).addClass("animated shake");
+        });
+        $(document).delegate("div.shaker", "mouseleave", function () {
+            $(this).removeClass("animated shake");
         });
     </script>
 }

@@ -1,17 +1,79 @@
-﻿@{
+﻿@using FundSharer.Models
+@model LoginViewModel
+@{
     ViewBag.Title = "Welcome";
 }
 
-<div class=" panel-info panel-body jumbotron text-center fade">
-    <div>
-        <h1 class="flicker">ExcElsior</h1>
-        <p class="lead flicker">Join and start making a difference today!</p>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Please Sign In.</h4>
+            </div>
+            <div class="modal-body" id="myModalBody">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        <section id="loginForm">
+                            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <hr />
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => Model.Email, new { @class = "col-md-2 control-label" })
+                                            <div class="col-md-10">
+                                                @Html.TextBoxFor(m => Model.Email, new { @class = "form-control" })
+                                                @Html.ValidationMessageFor(m => Model.Email, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.LabelFor(m => Model.Password, new { @class = "col-md-2 control-label" })
+                                            <div class="col-md-10">
+                                                @Html.PasswordFor(m => Model.Password, new { @class = "form-control" })&nbsp;
+                                                @Html.ValidationMessageFor(m => Model.Password, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-offset-2 col-md-10">
+                                                <div class="checkbox">
+                                                    @Html.CheckBoxFor(m => Model.RememberMe)
+                                                    @Html.LabelFor(m => Model.RememberMe)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-md-offset-2 col-md-10">
+                                                <input id="BtnSignIn" type="submit" value="Log in" class="btn btn-lg btn-success btn-lg" />
+                                            </div>
+                                        </div>
+                                        @* Enable this once you have account confirmation enabled for password reset functionality
+                                            <p>
+                                                @Html.ActionLink("Forgot your password?", "ForgotPassword")
+                                            </p>*@
+                            }
+                        </section>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" id="myModalFooter">
+
+            </div>
+        </div>
     </div>
 </div>
 
+<div class="panel-info panel-body jumbotron text-center">
+    <div>
+        <h1 class="animated lightSpeedIn">ExcElsior</h1>
+        <p class="lead">Join and start making a difference today!</p>
+    </div>
+</div>
 <div class="row">
         <div class="col-md-4">
-            <div class="well bg-info text-center fade">
+            <div class="well bg-info text-center">
                 <h2>About Us</h2>
                 <p>
                     Shared fund is a community where people assits one another on a platform that facilitates
@@ -21,7 +83,7 @@
             </div>
     </div>
         <div class="col-md-4">
-            <div class="well bg-success text-center fade">
+            <div class="well bg-success text-center">
                 <h2>How it Works</h2>
                 <ul>
                     <li><p>A member donate a sum of #50,000 to a designated beneficiary member assigned by the same.</p></li>
@@ -53,13 +115,10 @@
     </div>
 </div>
 @section scripts{
+@Scripts.Render("~/bundles/jqueryval")
     <script language="javascript" type="text/javascript" charset="utf-8">
         $(document).delegate("#loginLink", "click", function () {
-            $.get("/Account/Login", null, function (data) {
-                $("#myModalLabel").text(Login);
-                $("#myModalBody").html(data);
                 $("#myModal").modal('toggle');
-            });
-        });
+                });
     </script>
     }
