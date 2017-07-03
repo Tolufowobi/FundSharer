@@ -142,7 +142,7 @@ namespace FundSharer.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            return View();
+            return PartialView("_Register");
         }
 
         //
@@ -202,7 +202,8 @@ namespace FundSharer.Controllers
                             WaitingTicket Ticket = new WaitingTicket
                             {
                                 TicketHolder = NewbankAccount,
-                                EntryDate = DateTime.Now
+                                EntryDate = DateTime.Now,
+                                IsValid = true  
                             };
                             db.WaitingList.Add(Ticket);
                             db.Entry(NewbankAccount).State = System.Data.Entity.EntityState.Modified;
