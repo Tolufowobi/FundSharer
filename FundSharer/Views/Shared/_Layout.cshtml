@@ -12,8 +12,9 @@
     <link href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet"/>
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
+    <div class="row">
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                         <span class="icon-bar"></span>
@@ -21,37 +22,39 @@
                         <span class="icon-bar"></span>
                     </button>
                     <text style="color:ActiveCaption">ExcElsiorr</text>
-                   @* @Html.ActionLink("Fund Sharer", "Welcome", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
+                    @* @Html.ActionLink("Fund Sharer", "Welcome", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
                 </div>
-            <div class="navbar-collapse collapse">
-                
-                @{ if (ViewBag.Title == "Welcome")
-                    {
-                        @Html.Partial("_LoginLink");
-                        @Html.Partial("_RegisterLink");
+                <div class="navbar-collapse collapse">
+
+                    @{ if (ViewBag.Title == "Welcome")
+                        {
+                            @Html.Partial("_LoginLink");
+                            @Html.Partial("_RegisterLink");
+                        }
+                        else if (ViewBag.Title == "Register")
+                        {
+                            @Html.Partial("_LoginLink");
+                        }
+                        else if (ViewBag.Title == "Log in")
+                        {
+                            @Html.Partial("_RegisterLink");
+                        }
+                        else
+                        { @Html.Partial("_LoginRegister");
+                        }
                     }
-                    else if (ViewBag.Title == "Register")
-                    {
-                        @Html.Partial("_LoginLink");
-                    }
-                    else if (ViewBag.Title == "Log in")
-                    {
-                        @Html.Partial("_RegisterLink");
-                    }
-                    else
-                    { @Html.Partial("_LoginRegister");
-                    }
-                }
+                </div>
             </div>
         </div>
     </div>
-    <div class="container body-content">
-       
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - ExcElsior- Created by The Byte Men&trade;</p>
-        </footer>
+    <div class="row">
+        <div class="container body-content">
+            @RenderBody()
+            <hr />
+            <footer>
+                <p>&copy; @DateTime.Now.Year - ExcElsior- Created by The Byte Men&trade;</p>
+            </footer>
+        </div>
     </div>
 
     @Scripts.Render("~/bundles/bootstrap")

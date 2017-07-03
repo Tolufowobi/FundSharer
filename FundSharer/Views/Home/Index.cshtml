@@ -4,67 +4,8 @@
     ViewBag.Title = "Welcome";
 }
 
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                <h4 class="modal-title" id="myModalLabel">Please Sign In.</h4>
-            </div>
-            <div class="modal-body" id="myModalBody">
-                <div class="row">
-                    <div class="col-md-8 col-md-offset-2">
-                        <section id="loginForm">
-                            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                            {
-                                @Html.AntiForgeryToken()
-                                <hr />
-                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                                        <div class="form-group">
-                                            @Html.LabelFor(m => Model.Email, new { @class = "col-md-2 control-label" })
-                                            <div class="col-md-10">
-                                                @Html.TextBoxFor(m => Model.Email, new { @class = "form-control" })
-                                                @Html.ValidationMessageFor(m => Model.Email, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            @Html.LabelFor(m => Model.Password, new { @class = "col-md-2 control-label" })
-                                            <div class="col-md-10">
-                                                @Html.PasswordFor(m => Model.Password, new { @class = "form-control" })&nbsp;
-                                                @Html.ValidationMessageFor(m => Model.Password, "", new { @class = "text-danger" })
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-md-offset-2 col-md-10">
-                                                <div class="checkbox">
-                                                    @Html.CheckBoxFor(m => Model.RememberMe)
-                                                    @Html.LabelFor(m => Model.RememberMe)
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-md-offset-2 col-md-10">
-                                                <input id="BtnSignIn" type="submit" value="Log in" class="btn btn-lg btn-success btn-lg" />
-                                            </div>
-                                        </div>
-                                        @* Enable this once you have account confirmation enabled for password reset functionality
-                                            <p>
-                                                @Html.ActionLink("Forgot your password?", "ForgotPassword")
-                                            </p>*@
-                            }
-                        </section>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer" id="myModalFooter">
 
-            </div>
-        </div>
-    </div>
-</div>
-
+@Html.Partial("_Modal");
 <div class="panel-info panel-body jumbotron text-center">
     <div>
         <h1 class="animated lightSpeedIn">ExcElsior</h1>
@@ -118,7 +59,10 @@
 @Scripts.Render("~/bundles/jqueryval")
     <script language="javascript" type="text/javascript" charset="utf-8">
         $(document).delegate("#loginLink", "click", function () {
+            $("#myModalBody").load("/Account/Login", function () {
+                $("#myModalLabel").html("Please Sign In.")
                 $("#myModal").modal('toggle');
-                });
+                }); 
+            });
     </script>
     }
