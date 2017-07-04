@@ -185,7 +185,7 @@ namespace FundSharer.Controllers
                             AccountTitle = model.AccountTitle,
                             Bank = model.BankName,
                             IsReceiver = false,
-                            Owner = user
+                            BankAccountOwner = user
                         };
                         // BankAccountServices.AddBankAccount(NewbankAccount); **
                         db.Entry(user).State = System.Data.Entity.EntityState.Unchanged;
@@ -533,7 +533,7 @@ namespace FundSharer.Controllers
                             Id = usr.Id,
                             IsLocked = (bool)usr.IsLocked
                         };
-                    ud.AccountId = (from a in db.BankAccounts where a.OwnerId == usr.Id select a.Id).FirstOrDefault();
+                    ud.AccountId = (from a in db.BankAccounts where a.BankAccountOwnerId == usr.Id select a.Id).FirstOrDefault();
                         return PartialView("_UserDetails", ud);
                     }
                     else

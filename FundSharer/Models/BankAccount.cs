@@ -22,8 +22,8 @@ namespace FundSharer.Models
         public string AccountNumber { get; set; }
 
         [Required]
-        public string OwnerId { get; set; }       
-        public virtual ApplicationUser Owner { get; set; }
+        public string BankAccountOwnerId { get; set; }       
+        public virtual ApplicationUser BankAccountOwner { get; set; }
 
         [Display(Name = "Can Recieve Donations")]
         public bool IsReceiver { get; set; }

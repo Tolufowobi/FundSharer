@@ -21,7 +21,7 @@ namespace FundSharer.DataServices
 
         static public BankAccount GetUserBankAccount(ApplicationUser AUser)
         {
-            BankAccount Acc = (from ba in DbAccessHandler.DbContext.BankAccounts where ba.OwnerId == AUser.Id select ba).FirstOrDefault();
+            BankAccount Acc = (from ba in DbAccessHandler.DbContext.BankAccounts where ba.BankAccountOwnerId == AUser.Id select ba).FirstOrDefault();
             return Acc;
         }
 
@@ -32,12 +32,12 @@ namespace FundSharer.DataServices
             {
                     //check that the specified account doesn't exist...
                     //bank accounts should have a unique id, and bank name and account number combination
-                    int testCount = (from a in DbAccessHandler.DbContext.BankAccounts where a.Id == NewAccount.Id || (a.AccountNumber == NewAccount.AccountNumber && a.AccountTitle == NewAccount.AccountTitle) || a.Owner.Id == NewAccount.OwnerId select a.Id).Count();
+                    int testCount = (from a in DbAccessHandler.DbContext.BankAccounts where a.Id == NewAccount.Id || (a.AccountNumber == NewAccount.AccountNumber && a.AccountTitle == NewAccount.AccountTitle) || a.BankAccountOwner.Id == NewAccount.BankAccountOwnerId select a.Id).Count();
                     if (testCount == 0)// if the account doesn't exist, create it
                     {
                         //check that its referenced entity is not null and ensure that its state is defined as unchanged to 
                         //avoid record duplication
-                        if (NewAccount.Owner != null)
+                        if (NewAccount.BankAccountOwner != null)
                         {
                         //DbAccessHandler.DbContext.Entry(NewAccount.Owner).State = EntityState.Unchanged;
                         DbAccessHandler.DbContext.BankAccounts.Add(NewAccount);

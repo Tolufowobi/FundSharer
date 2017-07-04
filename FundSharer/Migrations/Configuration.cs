@@ -49,8 +49,8 @@ namespace FundSharer.Migrations
                         AccountTitle = User.FullName,
                         AccountNumber = "112345",
                         Bank = Banks[counter],
-                        Owner = User,
-                        OwnerId = User.Id
+                        BankAccountOwner = User,
+                        BankAccountOwnerId = User.Id
                     };
                     context.BankAccounts.Add(b);
                     if (counter == 0) // Create the first ticket 

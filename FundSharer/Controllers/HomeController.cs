@@ -213,7 +213,7 @@ namespace FundSharer.Controllers
             using (var db = new ApplicationDbContext())
             {
                 AppUser = db.Users.Find(UserId);
-                BankAccount donor = (from ba in db.BankAccounts where ba.OwnerId == AppUser.Id select ba).FirstOrDefault();
+                BankAccount donor = (from ba in db.BankAccounts where ba.BankAccountOwnerId == AppUser.Id select ba).FirstOrDefault();
                 string AdminUid = (from r in db.Roles where r.Name == "Administrator" select r).FirstOrDefault().Users.FirstOrDefault().UserId;
                 WaitingTicket Ticket = (from t in db.WaitingList where t.Donations.Count < 2 && t.IsValid == true && t.TicketHolderId == AdminUid orderby t.EntryDate select t).FirstOrDefault();
                 if(Ticket == null)

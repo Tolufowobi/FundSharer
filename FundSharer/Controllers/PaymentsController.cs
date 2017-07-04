@@ -194,7 +194,7 @@ namespace FundShare.Controllers
                 {
                     PaymentId = pay.Id,
                     Amount = pay.Amount,
-                    DonorName = pay.DonationPack.Donor.Owner.FullName,
+                    DonorName = pay.DonationPack.Donor.BankAccountOwner.FullName,
                     RecipientAccountNumber = pay.DonationPack.Ticket.TicketHolder.AccountNumber,
                     Date = pay.CreationDate.ToShortDateString(),
                     POPimage = img.Image

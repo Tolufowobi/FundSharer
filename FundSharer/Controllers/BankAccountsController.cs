@@ -92,7 +92,7 @@ namespace FundSharer.Controllers
             var acct = new BankAccount();
             using (var db = new ApplicationDbContext())
             {
-                acct = (from a in db.BankAccounts where a.OwnerId == uid select a).FirstOrDefault();
+                acct = (from a in db.BankAccounts where a.BankAccountOwnerId == uid select a).FirstOrDefault();
             }
                 
                 BankAccountDetails mdl = new BankAccountDetails() { AccountTitle = acct.AccountTitle, AccountNumber = acct.AccountNumber, BankName = acct.Bank, Id=acct.Id };
@@ -107,7 +107,7 @@ namespace FundSharer.Controllers
                 var uid = User.Identity.GetUserId();
                 using (var db = new ApplicationDbContext())
                 {
-                    var ba = (from a in db.BankAccounts where a.OwnerId == uid select a).FirstOrDefault();
+                    var ba = (from a in db.BankAccounts where a.BankAccountOwnerId == uid select a).FirstOrDefault();
                     if (ba != null)
                     {
                         ba.AccountTitle = values.AccountTitle;
@@ -136,7 +136,7 @@ namespace FundSharer.Controllers
             List<BankAccountDetails> AdminAccounts = new List<BankAccountDetails>();
             using (var db = new ApplicationDbContext())
             {
-                var AdmAcc = (from b in db.BankAccounts where b.OwnerId == uid select b).ToList();
+                var AdmAcc = (from b in db.BankAccounts where b.BankAccountOwnerId == uid select b).ToList();
                 if (AdmAcc.Count > 0)
                 {
                     foreach (BankAccount b in AdmAcc)
@@ -196,7 +196,7 @@ namespace FundSharer.Controllers
                 if(testaccount == 0)
                 {
                     var uid = User.Identity.GetUserId();
-                    BankAccount B = new BankAccount() { AccountNumber = NewAccount.AccountNumber, AccountTitle = NewAccount.AccountTitle, Bank = NewAccount.BankName, OwnerId = uid };
+                    BankAccount B = new BankAccount() { AccountNumber = NewAccount.AccountNumber, AccountTitle = NewAccount.AccountTitle, Bank = NewAccount.BankName, BankAccountOwnerId = uid };
                     db.BankAccounts.Add(B);
                     db.SaveChanges();
                 }

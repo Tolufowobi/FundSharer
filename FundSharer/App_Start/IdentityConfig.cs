@@ -54,7 +54,7 @@ namespace FundSharer
             manager.PasswordValidator = new PasswordValidator
             {
                 RequiredLength = 6,
-                RequireNonLetterOrDigit = true,
+                RequireNonLetterOrDigit = false,
                 RequireDigit = true,
                 RequireLowercase = true,
                 RequireUppercase = true,
@@ -63,7 +63,7 @@ namespace FundSharer
             // Configure user lockout defaults
             manager.UserLockoutEnabledByDefault = true;
             manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(30);
-            manager.MaxFailedAccessAttemptsBeforeLockout = 5;
+            manager.MaxFailedAccessAttemptsBeforeLockout = 7;
 
             // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
             // You can write your own provider and plug it in here.
@@ -104,16 +104,20 @@ namespace FundSharer
 
         public override Task<SignInStatus> PasswordSignInAsync(string userName, string password, bool rememberMe, bool shouldLockout)
         {
-            var user = UserManager.FindByEmailAsync(userName).Result;
-            if (user.IsLocked.Value)
-            {
-                return Task.FromResult<SignInStatus>(SignInStatus.LockedOut);
-            }
+            
             var result = base.PasswordSignInAsync(userName, password, rememberMe, shouldLockout);
             if (result.Result == SignInStatus.Success)
             {
-                UpdateUserLoginDate(user);
-            }
+                var user = UserManager.FindByEmailAsync(userName).Result;
+                if (user.IsLocked.Value)
+                {
+                    return Task.FromResult<SignInStatus>(SignInStatus.LockedOut);
+                }
+                else
+                {
+                    UpdateUserLoginDate(user);
+                }
+            }   
             return result;
         }
 
