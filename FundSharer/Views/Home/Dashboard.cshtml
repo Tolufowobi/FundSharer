@@ -28,80 +28,97 @@
                             <div class="panel-body">
                                 <div class="tab-content">
                                     <div class="tab-pane fade active in" id="Users" role="tabpanel">
-                                        <table id="dataTable-Users">
-                                            <thead>
-                                                <tr>
-                                                    <th>First Name</th>
-                                                    <th>Last Name</th>
-                                                    <th>User Name</th>
-                                                    <th>Phone Number </th>
-                                                    <th>Login TimeStamp </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="UsersBody"></tbody>
-                                        </table>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <table id="dataTable-Users">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>First Name</th>
+                                                            <th>Last Name</th>
+                                                            <th>User Name</th>
+                                                            <th>Phone Number </th>
+                                                            <th>Login TimeStamp </th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="UsersBody"></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="tab-pane fade" id="Accounts" role="tabpanel">
-                                        <table id="dataTable-BankAccounts">
-                                            <thead>
-                                                <tr>
-                                                    <th>Account Name</th>
-                                                    <th>Account Number</th>
-                                                    <th>Bank Name</th>
-                                                    <th># Incoming Payments</th>
-                                                    <th>Last Payment Received</th>
-                                                    <th># Outgoing Payments</th>
-                                                    <th>Last Payment Sent</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="AccountsBody"></tbody>
-                                        </table>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <table id="dataTable-BankAccounts">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Account Name</th>
+                                                            <th>Account Number</th>
+                                                            <th>Bank Name</th>
+                                                            <th># Incoming Payments</th>
+                                                            <th>Last Payment Received</th>
+                                                            <th># Outgoing Payments</th>
+                                                            <th>Last Payment Sent</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="AccountsBody"></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="tab-pane fade" id="Donations" role="tabpanel">
-                                        <table id="dataTable-Donations">
-                                            <thead>
-                                                <tr role="row">
-                                                    <th>Donor</th>
-                                                    <th>Recipeient</th>
-                                                    <th>Match Date</th>
-                                                    <th>Status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="DonationsBody"></tbody>
-                                        </table>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <table id="dataTable-Donations">
+                                                    <thead>
+                                                        <tr role="row">
+                                                            <th>Donor</th>
+                                                            <th>Recipeient</th>
+                                                            <th>Match Date</th>
+                                                            <th>Status</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="DonationsBody"></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="tab-pane fade" id="Payments" role="tabpanel">
-                                        <table id="dataTable-Payments">
-                                            <thead>
-                                                <tr>
-                                                    <th>Donor</th>
-                                                    <th>Recipient</th>
-                                                    <th>Submission Date</th>
-                                                    <th>Status</th>
-                                                    <th><b><i class="fa fa-paperclip fa-2x"></i></b></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="PaymentsBody"></tbody>
-                                        </table>
+                                        <div class="row">
+                                            <div class="col-sm-12">
+                                                <table id="dataTable-Payments">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Donor</th>
+                                                            <th>Recipient</th>
+                                                            <th>Submission Date</th>
+                                                            <th>Status</th>
+                                                            <th><b><i class="fa fa-paperclip fa-2x"></i></b></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="PaymentsBody"></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="tab-pane fade" id="AdminAccounts" role="tabpanel">
-
                                         <div class="row">
-                                            <table id="dataTable-AdminAccounts">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Account Title</th>
-                                                        <th>Account Number</th>
-                                                        <th>Bank Name</th>
-                                                        <th>Incoming Payments Count</th>
-                                                        <th>Last Payment Date</th>
-                                                        <th>Pending Payments</th>
-                                                        <th>-</th>
-                                                        <th>-</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="AdminAccountsBody"></tbody>
-                                            </table>
+                                            <div class="col-sm-12">
+                                                <table id="dataTable-AdminAccounts">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Account Title</th>
+                                                            <th>Account Number</th>
+                                                            <th>Bank Name</th>
+                                                            <th>Incoming Payments Count</th>
+                                                            <th>Last Payment Date</th>
+                                                            <th>Pending Payments</th>
+                                                            <th>-</th>
+                                                            <th>-</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="AdminAccountsBody"></tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                         <div class="row" style="padding-left:2em"><button id ="AddButton" class="btn btn-success" data-toggle="modal" data-target="#myModal">Add a new Account</button></div>
                                     </div>
