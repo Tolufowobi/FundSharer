@@ -58,17 +58,26 @@
 @section scripts{
 @Scripts.Render("~/bundles/jqueryval")
     <script language="javascript" type="text/javascript" charset="utf-8">
+            if ($('#myModalBody').hasClass('Login') == true) {
+                this.loadPartialViewToModal("/Account/Login", "Please Sign In.");
+            }
+            if ($('#myModalBody').hasClass('Register') == true) {
+                this.loadPartialViewToModal("/Account/Register", "Create a new account.");
+            }
+       
         $(document).delegate("#loginLink", "click", function () {
-            $("#myModalBody").load("/Account/Login", function () {
-                $("#myModalLabel").html("Please Sign In.")
-                $("#myModal").modal('toggle');
-                }); 
+            loadPartialViewToModal("/Account/Login", "Please Sign In.");
         });
         $(document).delegate("#registerLink", "click", function () {
-            $("#myModalBody").load("/Account/Register", function () {
-                $("#myModalLabel").html("Create a new account.")
-                $("#myModal").modal('toggle');
-            }); 
+            loadPartialViewToModal("/Account/Register", "Create a new account.")
         });
+
+        loadPartialViewToModal = function (url, titleString) {
+            $("#myModalBody").load(url, function () {
+                $("#myModalLabel").html(titleString)
+                $("#myModal").modal('toggle');
+            });
+        }
+            
     </script>
     }

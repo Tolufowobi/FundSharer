@@ -90,7 +90,8 @@ namespace FundSharer.Controllers
                 case SignInStatus.Failure:
                 default:
                     ModelState.AddModelError("", "Invalid login attempt.");
-                    return PartialView("_Login",model);
+                    ViewBag.preloadTitle = "Login";
+                    return RedirectToAction("Index", "Home");
             }
         }
 

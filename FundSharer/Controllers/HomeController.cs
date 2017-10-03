@@ -17,6 +17,7 @@ namespace FundSharer.Controllers
         [AllowAnonymous]
         public ActionResult Index()
         {
+            var test = ViewBag.preloadTitle;
             return View();
         }
 
